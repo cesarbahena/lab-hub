@@ -29,10 +29,10 @@ public class Schedule
     public DateTime ScheduledDate { get; set; }
 
     [Column("start_time")]
-    public TimeOnly? StartTime { get; set; }
+    public TimeSpan? StartTime { get; set; }
 
     [Column("end_time")]
-    public TimeOnly? EndTime { get; set; }
+    public TimeSpan? EndTime { get; set; }
 
     [Column("status")]
     [MaxLength(50)]

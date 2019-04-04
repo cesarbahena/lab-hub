@@ -16,10 +16,10 @@ public class Shift
     public string Name { get; set; } = string.Empty;
 
     [Column("start_time")]
-    public TimeOnly StartTime { get; set; }
+    public TimeSpan StartTime { get; set; }
 
     [Column("end_time")]
-    public TimeOnly EndTime { get; set; }
+    public TimeSpan EndTime { get; set; }
 
     [Column("is_active")]
     public bool IsActive { get; set; } = true;
