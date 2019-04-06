@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QuimiosHub.Data;
+using QuimiosHub.Services;
 
 namespace QuimiosHub
 {
@@ -22,6 +23,8 @@ namespace QuimiosHub
         {
             services.AddDbContext<QuimiosDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<ISampleService, SampleService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
