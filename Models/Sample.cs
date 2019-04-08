@@ -55,4 +55,10 @@ public class Sample
 
     [Column("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    [NotMapped]
+    public bool IsCompleted => FecLibera.HasValue;
+
+    [NotMapped]
+    public bool IsPending => !FecLibera.HasValue;
 }

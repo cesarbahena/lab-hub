@@ -48,4 +48,7 @@ public class InventoryItem
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public ICollection<InventoryMovement> InventoryMovements { get; set; } = new List<InventoryMovement>();
+
+    [NotMapped]
+    public bool IsLowStock => MinStock.HasValue && CurrentStock <= MinStock.Value;
 }
