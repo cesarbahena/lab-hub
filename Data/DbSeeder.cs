@@ -6,8 +6,56 @@ public static class DbSeeder
 {
     public static async Task SeedAsync(QuimiosDbContext context)
     {
-        if (context.Samples.Any())
+        if (context.Users.Any())
             return;
+
+        var users = new List<User>
+        {
+            new User
+            {
+                Username = "jperez",
+                FullName = "Juan Perez",
+                Email = "jperez@lab.com",
+                Role = "Analyst",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            },
+            new User
+            {
+                Username = "mgomez",
+                FullName = "Maria Gomez",
+                Email = "mgomez@lab.com",
+                Role = "Supervisor",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            }
+        };
+
+        context.Users.AddRange(users);
+        await context.SaveChangesAsync();
+
+        var shifts = new List<Shift>
+        {
+            new Shift
+            {
+                Name = "Morning",
+                StartTime = new TimeSpan(7, 0, 0),
+                EndTime = new TimeSpan(15, 0, 0),
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            },
+            new Shift
+            {
+                Name = "Afternoon",
+                StartTime = new TimeSpan(15, 0, 0),
+                EndTime = new TimeSpan(23, 0, 0),
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            }
+        };
+
+        context.Shifts.AddRange(shifts);
+        await context.SaveChangesAsync();
 
         var samples = new List<Sample>
         {
@@ -48,6 +96,39 @@ public static class DbSeeder
         };
 
         context.Samples.AddRange(samples);
+        await context.SaveChangesAsync();
+
+        var inventoryItems = new List<InventoryItem>
+        {
+            new InventoryItem
+            {
+                Code = "REA-001",
+                Name = "Test Tubes",
+                Description = "Standard 10ml test tubes",
+                Category = "Containers",
+                Unit = "Box",
+                CurrentStock = 50,
+                MinStock = 20,
+                MaxStock = 100,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            },
+            new InventoryItem
+            {
+                Code = "REA-002",
+                Name = "Reagent A",
+                Description = "Chemical reagent for blood analysis",
+                Category = "Reagents",
+                Unit = "Liter",
+                CurrentStock = 15.5m,
+                MinStock = 10,
+                MaxStock = 50,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            }
+        };
+
+        context.InventoryItems.AddRange(inventoryItems);
         await context.SaveChangesAsync();
     }
 }
