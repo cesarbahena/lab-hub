@@ -40,4 +40,10 @@ public class InventoryMovement
 
     [Column("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    [NotMapped]
+    public bool IsStockIncrease => MovementType == "IN" || MovementType == "ADJUSTMENT" && Quantity > 0;
+
+    [NotMapped]
+    public string FormattedMovement => $"{MovementType}: {(IsStockIncrease ? "+" : "")}{Quantity}";
 }

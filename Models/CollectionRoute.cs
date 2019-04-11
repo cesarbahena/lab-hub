@@ -27,4 +27,10 @@ public class CollectionRoute
 
     public ICollection<RouteStop> RouteStops { get; set; } = new List<RouteStop>();
     public ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
+
+    [NotMapped]
+    public int TotalStops => RouteStops?.Count ?? 0;
+
+    [NotMapped]
+    public int ActiveStops => RouteStops?.Count(rs => rs.IsActive) ?? 0;
 }
