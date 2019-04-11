@@ -21,6 +21,7 @@ public class User
     public string FullName { get; set; } = string.Empty;
 
     [Column("email")]
+    [EmailAddress]
     [MaxLength(200)]
     public string? Email { get; set; }
 
@@ -36,4 +37,7 @@ public class User
 
     public ICollection<ShiftHandover> ShiftHandovers { get; set; } = new List<ShiftHandover>();
     public ICollection<CheckIn> CheckIns { get; set; } = new List<CheckIn>();
+
+    [NotMapped]
+    public string DisplayName => $"{FullName} ({Username})";
 }

@@ -28,4 +28,12 @@ public class Shift
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public ICollection<ShiftHandover> ShiftHandovers { get; set; } = new List<ShiftHandover>();
+
+    [NotMapped]
+    public TimeSpan Duration => EndTime > StartTime
+        ? EndTime - StartTime
+        : TimeSpan.FromHours(24) - (StartTime - EndTime);
+
+    [NotMapped]
+    public string TimeRange => $"{StartTime:hh\\:mm} - {EndTime:hh\\:mm}";
 }
