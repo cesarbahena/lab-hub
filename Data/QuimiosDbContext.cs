@@ -41,6 +41,19 @@ public class QuimiosDbContext : DbContext
             .HasIndex(u => u.Username)
             .IsUnique();
 
+        // Add performance indexes
+        modelBuilder.Entity<Sample>()
+            .HasIndex(s => s.FechaRecep);
+
+        modelBuilder.Entity<Sample>()
+            .HasIndex(s => s.ClienteGrd);
+
+        modelBuilder.Entity<InventoryItem>()
+            .HasIndex(i => i.Category);
+
+        modelBuilder.Entity<ShiftHandover>()
+            .HasIndex(sh => sh.HandoverDate);
+
         // Configure decimal precision for inventory
         modelBuilder.Entity<InventoryItem>()
             .Property(i => i.CurrentStock)
