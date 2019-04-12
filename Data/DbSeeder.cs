@@ -92,6 +92,40 @@ public static class DbSeeder
                 Label3 = "Another Label 3",
                 FecNac = new DateTime(1985, 10, 20),
                 CreatedAt = DateTime.UtcNow
+            },
+            new Sample
+            {
+                FechaGrd = new DateTime(2023, 3, 20, 10, 15, 0),
+                FechaRecep = new DateTime(2023, 3, 20, 11, 0, 0),
+                FolioGrd = 98770,
+                ClienteGrd = 105,
+                PacienteGrd = 458,
+                EstPerGrd = 792,
+                Label1 = "Urine Analysis",
+                FecCapRes = new DateTime(2023, 3, 20, 15, 45, 0),
+                FecLibera = null,
+                SucProc = "Lab West",
+                Maquilador = "Quest Labs",
+                Label3 = "Pending",
+                FecNac = new DateTime(1992, 5, 14),
+                CreatedAt = DateTime.UtcNow
+            },
+            new Sample
+            {
+                FechaGrd = new DateTime(2023, 3, 21, 8, 45, 0),
+                FechaRecep = new DateTime(2023, 3, 21, 9, 30, 0),
+                FolioGrd = 98772,
+                ClienteGrd = 102,
+                PacienteGrd = 210,
+                EstPerGrd = 310,
+                Label1 = "Chemistry Panel",
+                FecCapRes = null,
+                FecLibera = null,
+                SucProc = "Branch B",
+                Maquilador = "Maq Y",
+                Label3 = "In Progress",
+                FecNac = new DateTime(1978, 11, 3),
+                CreatedAt = DateTime.UtcNow
             }
         };
 
