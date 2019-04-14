@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuimiosHub.Data;
+using QuimiosHub.DTOs;
 using QuimiosHub.Models;
 
 namespace QuimiosHub.Controllers;
@@ -17,45 +18,101 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<User>>> GetUsers([FromQuery] bool? isActive = null)
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers([FromQuery] bool? isActive = null)
     {
         var query = _context.Users.AsQueryable();
 
         if (isActive.HasValue)
             query = query.Where(u => u.IsActive == isActive.Value);
 
-        var users = await query.OrderBy(u => u.FullName).ToListAsync();
+        var users = await query
+            .OrderBy(u => u.FullName)
+            .Select(u => new UserDto
+            {
+                Id = u.Id,
+                Username = u.Username,
+                FullName = u.FullName,
+                Email = u.Email,
+                Role = u.Role,
+                IsActive = u.IsActive
+            })
+            .ToListAsync();
 
         return Ok(users);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<User>> GetUser(int id)
+    public async Task<ActionResult<UserDto>> GetUser(int id)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await _context.Users
+            .Where(u => u.Id == id)
+            .Select(u => new UserDto
+            {
+                Id = u.Id,
+                Username = u.Username,
+                FullName = u.FullName,
+                Email = u.Email,
+                Role = u.Role,
+                IsActive = u.IsActive
+            })
+            .FirstOrDefaultAsync();
 
         if (user == null)
-            return NotFound();
+            return NotFound(new { message = "User not found" });
 
         return Ok(user);
     }
 
     [HttpPost]
-    public async Task<ActionResult<User>> CreateUser(User user)
+    public async Task<ActionResult<UserDto>> CreateUser(CreateUserDto dto)
     {
+        if (await _context.Users.AnyAsync(u => u.Username == dto.Username))
+            return BadRequest(new { message = "Username already exists" });
+
+        var user = new User
+        {
+            Username = dto.Username,
+            FullName = dto.FullName,
+            Email = dto.Email,
+            Role = dto.Role,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow
+        };
+
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+        var userDto = new UserDto
+        {
+            Id = user.Id,
+            Username = user.Username,
+            FullName = user.FullName,
+            Email = user.Email,
+            Role = user.Role,
+            IsActive = user.IsActive
+        };
+
+        return CreatedAtAction(nameof(GetUser), new { id = user.Id }, userDto);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateUser(int id, User user)
+    public async Task<IActionResult> UpdateUser(int id, UpdateUserDto dto)
     {
-        if (id != user.Id)
-            return BadRequest();
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+            return NotFound(new { message = "User not found" });
 
-        _context.Entry(user).State = EntityState.Modified;
+        if (dto.FullName != null)
+            user.FullName = dto.FullName;
+
+        if (dto.Email != null)
+            user.Email = dto.Email;
+
+        if (dto.Role != null)
+            user.Role = dto.Role;
+
+        if (dto.IsActive.HasValue)
+            user.IsActive = dto.IsActive.Value;
 
         try
         {
