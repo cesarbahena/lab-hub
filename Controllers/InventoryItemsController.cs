@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuimiosHub.Data;
+using QuimiosHub.DTOs;
 using QuimiosHub.Models;
 
 namespace QuimiosHub.Controllers;
@@ -17,7 +18,7 @@ public class InventoryItemsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<InventoryItem>>> GetInventoryItems(
+    public async Task<ActionResult<IEnumerable<InventoryItemDto>>> GetInventoryItems(
         [FromQuery] string? category = null,
         [FromQuery] bool? isActive = null)
     {
@@ -29,7 +30,23 @@ public class InventoryItemsController : ControllerBase
         if (isActive.HasValue)
             query = query.Where(i => i.IsActive == isActive.Value);
 
-        var items = await query.OrderBy(i => i.Name).ToListAsync();
+        var items = await query
+            .OrderBy(i => i.Name)
+            .Select(i => new InventoryItemDto
+            {
+                Id = i.Id,
+                Code = i.Code,
+                Name = i.Name,
+                Description = i.Description,
+                Category = i.Category,
+                Unit = i.Unit,
+                CurrentStock = i.CurrentStock,
+                MinStock = i.MinStock,
+                MaxStock = i.MaxStock,
+                IsActive = i.IsActive,
+                IsLowStock = i.MinStock.HasValue && i.CurrentStock <= i.MinStock.Value
+            })
+            .ToListAsync();
 
         return Ok(items);
     }
@@ -59,21 +76,73 @@ public class InventoryItemsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<InventoryItem>> CreateInventoryItem(InventoryItem item)
+    public async Task<ActionResult<InventoryItemDto>> CreateInventoryItem(CreateInventoryItemDto dto)
     {
+        if (await _context.InventoryItems.AnyAsync(i => i.Code == dto.Code))
+            return BadRequest(new { message = "Item code already exists" });
+
+        var item = new InventoryItem
+        {
+            Code = dto.Code,
+            Name = dto.Name,
+            Description = dto.Description,
+            Category = dto.Category,
+            Unit = dto.Unit,
+            CurrentStock = dto.CurrentStock,
+            MinStock = dto.MinStock,
+            MaxStock = dto.MaxStock,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow
+        };
+
         _context.InventoryItems.Add(item);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetInventoryItem), new { id = item.Id }, item);
+        var itemDto = new InventoryItemDto
+        {
+            Id = item.Id,
+            Code = item.Code,
+            Name = item.Name,
+            Description = item.Description,
+            Category = item.Category,
+            Unit = item.Unit,
+            CurrentStock = item.CurrentStock,
+            MinStock = item.MinStock,
+            MaxStock = item.MaxStock,
+            IsActive = item.IsActive,
+            IsLowStock = item.MinStock.HasValue && item.CurrentStock <= item.MinStock.Value
+        };
+
+        return CreatedAtAction(nameof(GetInventoryItem), new { id = item.Id }, itemDto);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateInventoryItem(int id, InventoryItem item)
+    public async Task<IActionResult> UpdateInventoryItem(int id, UpdateInventoryItemDto dto)
     {
-        if (id != item.Id)
-            return BadRequest();
+        var item = await _context.InventoryItems.FindAsync(id);
+        if (item == null)
+            return NotFound(new { message = "Inventory item not found" });
 
-        _context.Entry(item).State = EntityState.Modified;
+        if (dto.Name != null)
+            item.Name = dto.Name;
+
+        if (dto.Description != null)
+            item.Description = dto.Description;
+
+        if (dto.Category != null)
+            item.Category = dto.Category;
+
+        if (dto.Unit != null)
+            item.Unit = dto.Unit;
+
+        if (dto.MinStock.HasValue)
+            item.MinStock = dto.MinStock.Value;
+
+        if (dto.MaxStock.HasValue)
+            item.MaxStock = dto.MaxStock.Value;
+
+        if (dto.IsActive.HasValue)
+            item.IsActive = dto.IsActive.Value;
 
         try
         {
@@ -90,13 +159,29 @@ public class InventoryItemsController : ControllerBase
     }
 
     [HttpPost("{id}/movements")]
-    public async Task<ActionResult<InventoryMovement>> CreateMovement(int id, InventoryMovement movement)
+    public async Task<ActionResult> CreateMovement(int id, CreateInventoryMovementDto dto)
     {
         var item = await _context.InventoryItems.FindAsync(id);
         if (item == null)
-            return NotFound();
+            return NotFound(new { message = "Inventory item not found" });
 
-        movement.InventoryItemId = id;
+        if (dto.MovementType != "IN" && dto.MovementType != "OUT" && dto.MovementType != "ADJUSTMENT")
+            return BadRequest(new { message = "Invalid movement type. Use IN, OUT, or ADJUSTMENT" });
+
+        if (dto.Quantity <= 0)
+            return BadRequest(new { message = "Quantity must be greater than zero" });
+
+        var movement = new InventoryMovement
+        {
+            InventoryItemId = id,
+            MovementType = dto.MovementType,
+            Quantity = dto.Quantity,
+            Reference = dto.Reference,
+            Notes = dto.Notes,
+            MovementDate = dto.MovementDate,
+            CreatedAt = DateTime.UtcNow
+        };
+
         _context.InventoryMovements.Add(movement);
 
         if (movement.MovementType == "IN")
@@ -108,6 +193,6 @@ public class InventoryItemsController : ControllerBase
 
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetInventoryItem), new { id = item.Id }, movement);
+        return Ok(new { message = "Movement created successfully", currentStock = item.CurrentStock });
     }
 }
