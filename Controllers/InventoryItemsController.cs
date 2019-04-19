@@ -52,14 +52,40 @@ public class InventoryItemsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<InventoryItem>> GetInventoryItem(int id)
+    public async Task<ActionResult<InventoryItemDetailDto>> GetInventoryItem(int id)
     {
         var item = await _context.InventoryItems
-            .Include(i => i.InventoryMovements.OrderByDescending(m => m.MovementDate).Take(10))
-            .FirstOrDefaultAsync(i => i.Id == id);
+            .Where(i => i.Id == id)
+            .Select(i => new InventoryItemDetailDto
+            {
+                Id = i.Id,
+                Code = i.Code,
+                Name = i.Name,
+                Description = i.Description,
+                Category = i.Category,
+                Unit = i.Unit,
+                CurrentStock = i.CurrentStock,
+                MinStock = i.MinStock,
+                MaxStock = i.MaxStock,
+                IsActive = i.IsActive,
+                IsLowStock = i.MinStock.HasValue && i.CurrentStock <= i.MinStock.Value,
+                RecentMovements = i.InventoryMovements
+                    .OrderByDescending(m => m.MovementDate)
+                    .Take(10)
+                    .Select(m => new InventoryMovementDto
+                    {
+                        Id = m.Id,
+                        MovementType = m.MovementType,
+                        Quantity = m.Quantity,
+                        Reference = m.Reference,
+                        Notes = m.Notes,
+                        MovementDate = m.MovementDate
+                    }).ToList()
+            })
+            .FirstOrDefaultAsync();
 
         if (item == null)
-            return NotFound();
+            return NotFound(new { message = "Inventory item not found" });
 
         return Ok(item);
     }

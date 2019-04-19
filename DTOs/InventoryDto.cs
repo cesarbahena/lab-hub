@@ -17,6 +17,32 @@ public class InventoryItemDto
     public bool IsLowStock { get; set; }
 }
 
+public class InventoryItemDetailDto
+{
+    public int Id { get; set; }
+    public string Code { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public string? Category { get; set; }
+    public string? Unit { get; set; }
+    public decimal CurrentStock { get; set; }
+    public decimal? MinStock { get; set; }
+    public decimal? MaxStock { get; set; }
+    public bool IsActive { get; set; }
+    public bool IsLowStock { get; set; }
+    public List<InventoryMovementDto> RecentMovements { get; set; } = new();
+}
+
+public class InventoryMovementDto
+{
+    public int Id { get; set; }
+    public string MovementType { get; set; } = string.Empty;
+    public decimal Quantity { get; set; }
+    public string? Reference { get; set; }
+    public string? Notes { get; set; }
+    public DateTime MovementDate { get; set; }
+}
+
 public class CreateInventoryItemDto
 {
     [Required]
