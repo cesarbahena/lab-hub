@@ -25,6 +25,7 @@ namespace QuimiosHub
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<ISampleService, SampleService>();
+            services.AddScoped<IInventoryService, InventoryService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
