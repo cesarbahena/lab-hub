@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using QuimiosHub.Data;
 using QuimiosHub.DTOs;
 using QuimiosHub.Models;
+using QuimiosHub.Services;
 
 namespace QuimiosHub.Controllers;
 
@@ -11,10 +12,12 @@ namespace QuimiosHub.Controllers;
 public class InventoryItemsController : ControllerBase
 {
     private readonly QuimiosDbContext _context;
+    private readonly IInventoryService _inventoryService;
 
-    public InventoryItemsController(QuimiosDbContext context)
+    public InventoryItemsController(QuimiosDbContext context, IInventoryService inventoryService)
     {
         _context = context;
+        _inventoryService = inventoryService;
     }
 
     [HttpGet]
@@ -91,13 +94,9 @@ public class InventoryItemsController : ControllerBase
     }
 
     [HttpGet("low-stock")]
-    public async Task<ActionResult<IEnumerable<InventoryItem>>> GetLowStockItems()
+    public async Task<ActionResult<IEnumerable<InventoryItemDto>>> GetLowStockItems()
     {
-        var items = await _context.InventoryItems
-            .Where(i => i.IsActive && i.MinStock.HasValue && i.CurrentStock <= i.MinStock.Value)
-            .OrderBy(i => i.CurrentStock)
-            .ToListAsync();
-
+        var items = await _inventoryService.GetLowStockItemsAsync();
         return Ok(items);
     }
 
@@ -187,38 +186,11 @@ public class InventoryItemsController : ControllerBase
     [HttpPost("{id}/movements")]
     public async Task<ActionResult> CreateMovement(int id, CreateInventoryMovementDto dto)
     {
-        var item = await _context.InventoryItems.FindAsync(id);
-        if (item == null)
-            return NotFound(new { message = "Inventory item not found" });
+        var (success, message, newStock) = await _inventoryService.ProcessMovementAsync(id, dto);
 
-        if (dto.MovementType != "IN" && dto.MovementType != "OUT" && dto.MovementType != "ADJUSTMENT")
-            return BadRequest(new { message = "Invalid movement type. Use IN, OUT, or ADJUSTMENT" });
+        if (!success)
+            return BadRequest(new { message });
 
-        if (dto.Quantity <= 0)
-            return BadRequest(new { message = "Quantity must be greater than zero" });
-
-        var movement = new InventoryMovement
-        {
-            InventoryItemId = id,
-            MovementType = dto.MovementType,
-            Quantity = dto.Quantity,
-            Reference = dto.Reference,
-            Notes = dto.Notes,
-            MovementDate = dto.MovementDate,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        _context.InventoryMovements.Add(movement);
-
-        if (movement.MovementType == "IN")
-            item.CurrentStock += movement.Quantity;
-        else if (movement.MovementType == "OUT")
-            item.CurrentStock -= movement.Quantity;
-        else if (movement.MovementType == "ADJUSTMENT")
-            item.CurrentStock = movement.Quantity;
-
-        await _context.SaveChangesAsync();
-
-        return Ok(new { message = "Movement created successfully", currentStock = item.CurrentStock });
+        return Ok(new { message, currentStock = newStock });
     }
 }
