@@ -83,8 +83,8 @@ public class StatisticsController : ControllerBase
         var startDate = DateTime.UtcNow.AddDays(-days);
 
         var dailyStats = await _context.Samples
-            .Where(s => s.FechaRecep >= startDate)
-            .GroupBy(s => s.FechaRecep.Date)
+            .Where(s => s.FechaRecep != null && s.FechaRecep >= startDate)
+            .GroupBy(s => s.FechaRecep.Value.Date)
             .Select(g => new
             {
                 date = g.Key,
