@@ -6,8 +6,11 @@ public static class DbSeeder
 {
     public static async Task SeedAsync(QuimiosDbContext context)
     {
+        // Skip if already seeded
         if (context.Users.Any())
             return;
+
+        Console.WriteLine("Seeding database with initial data...");
 
         var users = new List<User>
         {
@@ -26,6 +29,24 @@ public static class DbSeeder
                 FullName = "Maria Gomez",
                 Email = "mgomez@lab.com",
                 Role = "Supervisor",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            },
+            new User
+            {
+                Username = "rlopez",
+                FullName = "Roberto Lopez",
+                Email = "rlopez@lab.com",
+                Role = "Technician",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            },
+            new User
+            {
+                Username = "amartinez",
+                FullName = "Ana Martinez",
+                Email = "amartinez@lab.com",
+                Role = "Manager",
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
             }
@@ -51,11 +72,20 @@ public static class DbSeeder
                 EndTime = new TimeSpan(23, 0, 0),
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
+            },
+            new Shift
+            {
+                Name = "Night",
+                StartTime = new TimeSpan(23, 0, 0),
+                EndTime = new TimeSpan(7, 0, 0),
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
             }
         };
 
         context.Shifts.AddRange(shifts);
         await context.SaveChangesAsync();
+        Console.WriteLine($"Seeded {shifts.Count} shifts");
 
         var samples = new List<Sample>
         {
