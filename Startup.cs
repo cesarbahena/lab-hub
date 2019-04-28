@@ -26,6 +26,7 @@ namespace QuimiosHub
 
             services.AddScoped<ISampleService, SampleService>();
             services.AddScoped<IInventoryService, InventoryService>();
+            services.AddScoped<IAuthService, AuthService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
