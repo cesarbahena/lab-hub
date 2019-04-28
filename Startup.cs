@@ -22,7 +22,7 @@ namespace QuimiosHub
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<QuimiosDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<ISampleService, SampleService>();
             services.AddScoped<IInventoryService, InventoryService>();

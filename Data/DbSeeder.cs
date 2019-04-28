@@ -91,59 +91,59 @@ public static class DbSeeder
         {
             new Sample
             {
-                FechaGrd = new DateTime(2023, 3, 15, 8, 30, 0),
-                FechaRecep = new DateTime(2023, 3, 15, 9, 15, 0),
+                FechaGrd = new DateTime(2023, 3, 15, 8, 30, 0, DateTimeKind.Utc),
+                FechaRecep = new DateTime(2023, 3, 15, 9, 15, 0, DateTimeKind.Utc),
                 FolioGrd = 98765,
                 ClienteGrd = 105,
                 PacienteGrd = 450,
                 EstPerGrd = 789,
                 Label1 = "Blood Test",
-                FecCapRes = new DateTime(2023, 3, 15, 14, 30, 0),
-                FecLibera = new DateTime(2023, 3, 16, 9, 0, 0),
+                FecCapRes = new DateTime(2023, 3, 15, 14, 30, 0, DateTimeKind.Utc),
+                FecLibera = new DateTime(2023, 3, 16, 9, 0, 0, DateTimeKind.Utc),
                 SucProc = "Lab West",
                 Maquilador = "Quest Labs",
                 Label3 = "Urgent",
-                FecNac = new DateTime(1985, 8, 22),
+                FecNac = new DateTime(1985, 8, 22, 0, 0, 0, DateTimeKind.Utc),
                 CreatedAt = DateTime.UtcNow
             },
             new Sample
             {
-                FechaGrd = new DateTime(2023, 2, 2, 9, 30, 0),
-                FechaRecep = new DateTime(2023, 2, 2, 10, 30, 0),
+                FechaGrd = new DateTime(2023, 2, 2, 9, 30, 0, DateTimeKind.Utc),
+                FechaRecep = new DateTime(2023, 2, 2, 10, 30, 0, DateTimeKind.Utc),
                 FolioGrd = 12346,
                 ClienteGrd = 102,
                 PacienteGrd = 203,
                 EstPerGrd = 304,
                 Label1 = "Another Label 1",
-                FecCapRes = new DateTime(2023, 2, 2, 11, 30, 0),
-                FecLibera = new DateTime(2023, 2, 2, 12, 30, 0),
+                FecCapRes = new DateTime(2023, 2, 2, 11, 30, 0, DateTimeKind.Utc),
+                FecLibera = new DateTime(2023, 2, 2, 12, 30, 0, DateTimeKind.Utc),
                 SucProc = "Branch B",
                 Maquilador = "Maq Y",
                 Label3 = "Another Label 3",
-                FecNac = new DateTime(1985, 10, 20),
+                FecNac = new DateTime(1985, 10, 20, 0, 0, 0, DateTimeKind.Utc),
                 CreatedAt = DateTime.UtcNow
             },
             new Sample
             {
-                FechaGrd = new DateTime(2023, 3, 20, 10, 15, 0),
-                FechaRecep = new DateTime(2023, 3, 20, 11, 0, 0),
+                FechaGrd = new DateTime(2023, 3, 20, 10, 15, 0, DateTimeKind.Utc),
+                FechaRecep = new DateTime(2023, 3, 20, 11, 0, 0, DateTimeKind.Utc),
                 FolioGrd = 98770,
                 ClienteGrd = 105,
                 PacienteGrd = 458,
                 EstPerGrd = 792,
                 Label1 = "Urine Analysis",
-                FecCapRes = new DateTime(2023, 3, 20, 15, 45, 0),
+                FecCapRes = new DateTime(2023, 3, 20, 15, 45, 0, DateTimeKind.Utc),
                 FecLibera = null,
                 SucProc = "Lab West",
                 Maquilador = "Quest Labs",
                 Label3 = "Pending",
-                FecNac = new DateTime(1992, 5, 14),
+                FecNac = new DateTime(1992, 5, 14, 0, 0, 0, DateTimeKind.Utc),
                 CreatedAt = DateTime.UtcNow
             },
             new Sample
             {
-                FechaGrd = new DateTime(2023, 3, 21, 8, 45, 0),
-                FechaRecep = new DateTime(2023, 3, 21, 9, 30, 0),
+                FechaGrd = new DateTime(2023, 3, 21, 8, 45, 0, DateTimeKind.Utc),
+                FechaRecep = new DateTime(2023, 3, 21, 9, 30, 0, DateTimeKind.Utc),
                 FolioGrd = 98772,
                 ClienteGrd = 102,
                 PacienteGrd = 210,
@@ -154,7 +154,7 @@ public static class DbSeeder
                 SucProc = "Branch B",
                 Maquilador = "Maq Y",
                 Label3 = "In Progress",
-                FecNac = new DateTime(1978, 11, 3),
+                FecNac = new DateTime(1978, 11, 3, 0, 0, 0, DateTimeKind.Utc),
                 CreatedAt = DateTime.UtcNow
             }
         };
