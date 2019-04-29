@@ -1,0 +1,18 @@
+namespace QuimiosHub.DTOs;
+
+public class CreateSampleDto
+{
+    public DateTime? FechaGrd { get; set; }
+    public DateTime? FechaRecep { get; set; }
+    public int? FolioGrd { get; set; }
+    public int? ClienteGrd { get; set; }
+    public int? PacienteGrd { get; set; }
+    public int? EstPerGrd { get; set; }
+    public string? Label1 { get; set; }
+    public DateTime? FecCapRes { get; set; }
+    public DateTime? FecLibera { get; set; }
+    public string? SucProc { get; set; }
+    public string? Maquilador { get; set; }
+    public string? Label3 { get; set; }
+    public DateTime? FecNac { get; set; }
+}

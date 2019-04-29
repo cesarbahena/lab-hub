@@ -17,6 +17,15 @@ public class SamplesController : ControllerBase
         _context = context;
     }
 
+    private static DateTime? ToUtc(DateTime? dateTime)
+    {
+        if (!dateTime.HasValue) return null;
+        if (dateTime.Value.Kind == DateTimeKind.Utc) return dateTime.Value;
+        if (dateTime.Value.Kind == DateTimeKind.Local) return dateTime.Value.ToUniversalTime();
+        // Unspecified - assume UTC
+        return DateTime.SpecifyKind(dateTime.Value, DateTimeKind.Utc);
+    }
+
     [HttpGet]
     public async Task<ActionResult> GetSamples(
         [FromQuery] int? clienteGrd = null,
@@ -118,5 +127,83 @@ public class SamplesController : ControllerBase
             .ToListAsync();
 
         return Ok(samples);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<SampleDto>> CreateSample([FromBody] CreateSampleDto dto)
+    {
+        if (dto == null)
+            return BadRequest(new { message = "Sample data is required" });
+
+        Sample? sample = null;
+        bool isNew = true;
+
+        // Check if sample already exists by FolioGrd (unique identifier)
+        if (dto.FolioGrd.HasValue)
+        {
+            sample = await _context.Samples.FirstOrDefaultAsync(s => s.FolioGrd == dto.FolioGrd.Value);
+
+            if (sample != null)
+            {
+                // Update existing sample
+                isNew = false;
+                sample.FechaGrd = ToUtc(dto.FechaGrd);
+                sample.FechaRecep = ToUtc(dto.FechaRecep);
+                sample.ClienteGrd = dto.ClienteGrd;
+                sample.PacienteGrd = dto.PacienteGrd;
+                sample.EstPerGrd = dto.EstPerGrd;
+                sample.Label1 = dto.Label1;
+                sample.FecCapRes = ToUtc(dto.FecCapRes);
+                sample.FecLibera = ToUtc(dto.FecLibera);
+                sample.SucProc = dto.SucProc;
+                sample.Maquilador = dto.Maquilador;
+                sample.Label3 = dto.Label3;
+                sample.FecNac = ToUtc(dto.FecNac);
+            }
+        }
+
+        // Create new sample if not found
+        if (sample == null)
+        {
+            sample = new Sample
+            {
+                FechaGrd = ToUtc(dto.FechaGrd),
+                FechaRecep = ToUtc(dto.FechaRecep),
+                FolioGrd = dto.FolioGrd,
+                ClienteGrd = dto.ClienteGrd,
+                PacienteGrd = dto.PacienteGrd,
+                EstPerGrd = dto.EstPerGrd,
+                Label1 = dto.Label1,
+                FecCapRes = ToUtc(dto.FecCapRes),
+                FecLibera = ToUtc(dto.FecLibera),
+                SucProc = dto.SucProc,
+                Maquilador = dto.Maquilador,
+                Label3 = dto.Label3,
+                FecNac = ToUtc(dto.FecNac),
+                CreatedAt = DateTime.UtcNow
+            };
+            _context.Samples.Add(sample);
+        }
+
+        await _context.SaveChangesAsync();
+
+        var result = new SampleDto
+        {
+            Id = sample.Id,
+            FechaGrd = sample.FechaGrd,
+            FechaRecep = sample.FechaRecep,
+            FolioGrd = sample.FolioGrd,
+            ClienteGrd = sample.ClienteGrd,
+            PacienteGrd = sample.PacienteGrd,
+            Label1 = sample.Label1,
+            FecCapRes = sample.FecCapRes,
+            FecLibera = sample.FecLibera,
+            SucProc = sample.SucProc
+        };
+
+        if (isNew)
+            return CreatedAtAction(nameof(GetSample), new { id = sample.Id }, result);
+        else
+            return Ok(result);
     }
 }
