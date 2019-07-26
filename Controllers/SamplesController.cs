@@ -11,10 +11,12 @@ namespace QuimiosHub.Controllers;
 public class SamplesController : ControllerBase
 {
     private readonly QuimiosDbContext _context;
+    private readonly IWebHostEnvironment _env;
 
-    public SamplesController(QuimiosDbContext context)
+    public SamplesController(QuimiosDbContext context, IWebHostEnvironment env)
     {
         _context = context;
+        _env = env;
     }
 
     private static DateTime? ToUtc(DateTime? dateTime)
@@ -127,6 +129,16 @@ public class SamplesController : ControllerBase
             .ToListAsync();
 
         return Ok(samples);
+    }
+
+    [HttpDelete("dev/clear")]
+    public async Task<ActionResult> ClearAllSamples()
+    {
+        if (!_env.IsDevelopment())
+            return NotFound();
+
+        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"Samples\" RESTART IDENTITY CASCADE");
+        return Ok(new { message = "Development database cleared", count = 0 });
     }
 
     [HttpPost]
