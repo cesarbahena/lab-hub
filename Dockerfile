@@ -10,7 +10,6 @@ RUN dotnet restore
 COPY . ./
 RUN dotnet publish -c Release -o /app/publish \
     --no-restore \
-    --runtime linux-musl-x64 \
     --self-contained false
 
 # Runtime stage
