@@ -1,7 +1,7 @@
-using QuimiosHub.DTOs;
-using QuimiosHub.Models;
+using QuimiOSHub.DTOs;
+using QuimiOSHub.Models;
 
-namespace QuimiosHub.Services;
+namespace QuimiOSHub.Services;
 
 public interface ISampleService
 {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace QuimiosHub.Models;
+namespace QuimiOSHub.Models;
 
 public class LoginRequest
 {

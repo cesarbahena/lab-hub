@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QuimiosHub.Data;
-using QuimiosHub.DTOs;
-using QuimiosHub.Models;
-using QuimiosHub.Services;
+using QuimiOSHub.Data;
+using QuimiOSHub.DTOs;
+using QuimiOSHub.Models;
+using QuimiOSHub.Services;
 
-namespace QuimiosHub.Controllers;
+namespace QuimiOSHub.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

@@ -1,6 +1,6 @@
-using QuimiosHub.Models;
+using QuimiOSHub.Models;
 
-namespace QuimiosHub.Data;
+namespace QuimiOSHub.Data;
 
 public static class DbSeeder
 {

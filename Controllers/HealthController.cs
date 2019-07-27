@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using QuimiosHub.Data;
+using QuimiOSHub.Data;
 
-namespace QuimiosHub.Controllers;
+namespace QuimiOSHub.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

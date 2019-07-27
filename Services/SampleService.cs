@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using QuimiosHub.Data;
-using QuimiosHub.DTOs;
-using QuimiosHub.Models;
+using QuimiOSHub.Data;
+using QuimiOSHub.DTOs;
+using QuimiOSHub.Models;
 
-namespace QuimiosHub.Services;
+namespace QuimiOSHub.Services;
 
 public class SampleService : ISampleService
 {

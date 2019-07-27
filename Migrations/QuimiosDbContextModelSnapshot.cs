@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using QuimiosHub.Data;
+using QuimiOSHub.Data;
 
 #nullable disable
 
-namespace QuimiosHub.Migrations
+namespace QuimiOSHub.Migrations
 {
     [DbContext(typeof(QuimiosDbContext))]
     partial class QuimiosDbContextModelSnapshot : ModelSnapshot

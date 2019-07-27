@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using QuimiosHub.Data;
-using QuimiosHub.Services;
+using QuimiOSHub.Data;
+using QuimiOSHub.Services;
 
-namespace QuimiosHub
+namespace QuimiOSHub
 {
     public class Startup
     {

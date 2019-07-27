@@ -1,4 +1,4 @@
-namespace QuimiosHub.Models;
+namespace QuimiOSHub.Models;
 
 public class LoginResponse
 {

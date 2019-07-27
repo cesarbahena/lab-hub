@@ -16,6 +16,9 @@ RUN dotnet publish -c Release -o /app/publish \
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine
 WORKDIR /app
 
+# Install ICU libraries for globalization support
+RUN apk add --no-cache icu-libs
+
 # Create non-root user
 RUN addgroup -g 1000 appgroup && \
     adduser -u 1000 -G appgroup -s /bin/sh -D appuser && \

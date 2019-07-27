@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using QuimiosHub.Models;
+using QuimiOSHub.Models;
 
-namespace QuimiosHub.Data;
+namespace QuimiOSHub.Data;
 
 public class QuimiosDbContext : DbContext
 {

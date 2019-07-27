@@ -1,4 +1,4 @@
-namespace QuimiosHub.DTOs;
+namespace QuimiOSHub.DTOs;
 
 public class CreateSampleDto
 {

@@ -1,6 +1,6 @@
-using QuimiosHub.Models;
+using QuimiOSHub.Models;
 
-namespace QuimiosHub.Services;
+namespace QuimiOSHub.Services;
 
 public interface IAuthService
 {

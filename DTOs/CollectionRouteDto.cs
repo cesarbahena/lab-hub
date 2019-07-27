@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace QuimiosHub.DTOs;
+namespace QuimiOSHub.DTOs;
 
 public class CollectionRouteDto
 {

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace QuimiosHub.Data;
+namespace QuimiOSHub.Data;
 
 public static class DatabaseExtensions
 {

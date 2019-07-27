@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace QuimiosHub.Models;
+namespace QuimiOSHub.Models;
 
 [Table("check_ins")]
 public class CheckIn

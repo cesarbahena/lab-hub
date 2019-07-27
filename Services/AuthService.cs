@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using QuimiosHub.Data;
-using QuimiosHub.Models;
+using QuimiOSHub.Data;
+using QuimiOSHub.Models;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace QuimiosHub.Services;
+namespace QuimiOSHub.Services;
 
 public class AuthService : IAuthService
 {

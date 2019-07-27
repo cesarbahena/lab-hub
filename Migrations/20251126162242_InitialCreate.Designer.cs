@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using QuimiosHub.Data;
+using QuimiOSHub.Data;
 
 #nullable disable
 
-namespace QuimiosHub.Migrations
+namespace QuimiOSHub.Migrations
 {
     [DbContext(typeof(QuimiosDbContext))]
     [Migration("20251126162242_InitialCreate")]
