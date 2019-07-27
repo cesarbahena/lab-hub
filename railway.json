@@ -6,7 +6,7 @@
   },
   "deploy": {
     "startCommand": "dotnet QuimiOSHub.dll",
-    "healthcheckPath": "/health",
+    "healthcheckPath": "/api/health/ping",
     "healthcheckTimeout": 100,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
