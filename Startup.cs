@@ -44,7 +44,8 @@ namespace QuimiOSHub
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "QuimiosHub v1"));
             }
-            
+
+            context.Database.Migrate();
             DbSeeder.SeedAsync(context).Wait();
 
             app.UseHttpsRedirection();
