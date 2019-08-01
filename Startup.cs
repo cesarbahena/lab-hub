@@ -36,7 +36,7 @@ namespace QuimiOSHub
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, QuimiosDbContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, QuimiosDbContext context, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -45,8 +45,13 @@ namespace QuimiOSHub
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "QuimiosHub v1"));
             }
 
+            var logger = loggerFactory.CreateLogger("DatabaseSeeder");
+            logger.LogInformation("Running database migrations...");
+
             context.Database.Migrate();
-            DbSeeder.SeedAsync(context).Wait();
+            logger.LogInformation("Database migrations completed");
+
+            DbSeeder.SeedAsync(context, logger).Wait();
 
             app.UseHttpsRedirection();
 

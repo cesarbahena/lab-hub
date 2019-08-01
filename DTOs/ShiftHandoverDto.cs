@@ -44,6 +44,8 @@ public class CreatePendingSampleDto
     [Required]
     public int SampleId { get; set; }
 
+    public int? FolioGrd { get; set; }
+
     [MaxLength(500)]
     public string? Reason { get; set; }
 }

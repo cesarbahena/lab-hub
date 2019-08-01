@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using QuimiOSHub.Data;
@@ -11,9 +12,11 @@ using QuimiOSHub.Data;
 namespace QuimiOSHub.Migrations
 {
     [DbContext(typeof(QuimiosDbContext))]
-    partial class QuimiosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251226165551_UpdateExistingUsersWithPasswords")]
+    partial class UpdateExistingUsersWithPasswords
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -334,69 +337,73 @@ namespace QuimiOSHub.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("birth_date");
-
-                    b.Property<int?>("ClientId")
+                    b.Property<int?>("ClienteGrd")
                         .HasColumnType("integer")
-                        .HasColumnName("client_id");
+                        .HasColumnName("cliente_grd");
 
-                    b.Property<DateTime?>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<int?>("ExamId")
+                    b.Property<int?>("EstPerGrd")
                         .HasColumnType("integer")
-                        .HasColumnName("exam_id");
+                        .HasColumnName("est_per_grd");
 
-                    b.Property<string>("ExamName")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("exam_name");
+                    b.Property<DateTime?>("FecCapRes")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("fec_cap_res");
 
-                    b.Property<int?>("Folio")
+                    b.Property<DateTime?>("FecLibera")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("fec_libera");
+
+                    b.Property<DateTime?>("FecNac")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("fec_nac");
+
+                    b.Property<DateTime?>("FechaGrd")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("fecha_grd");
+
+                    b.Property<DateTime?>("FechaRecep")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("fecha_recep");
+
+                    b.Property<int?>("FolioGrd")
                         .HasColumnType("integer")
-                        .HasColumnName("folio");
+                        .HasColumnName("folio_grd");
 
-                    b.Property<string>("Location")
+                    b.Property<string>("Label1")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
-                        .HasColumnName("location");
+                        .HasColumnName("label1");
 
-                    b.Property<string>("Outsourcer")
+                    b.Property<string>("Label3")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
-                        .HasColumnName("outsourcer");
+                        .HasColumnName("label3");
 
-                    b.Property<int?>("PatientId")
+                    b.Property<string>("Maquilador")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("maquilador");
+
+                    b.Property<int?>("PacienteGrd")
                         .HasColumnType("integer")
-                        .HasColumnName("patient_id");
+                        .HasColumnName("paciente_grd");
 
-                    b.Property<string>("Priority")
+                    b.Property<string>("SucProc")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
-                        .HasColumnName("priority");
-
-                    b.Property<DateTime?>("ProcessedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("processed_at");
-
-                    b.Property<DateTime?>("ReceivedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("received_at");
-
-                    b.Property<DateTime?>("ValidatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("validated_at");
+                        .HasColumnName("suc_proc");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("ClienteGrd");
 
-                    b.HasIndex("ReceivedAt");
+                    b.HasIndex("FechaRecep");
 
-                    b.HasIndex("Folio", "ClientId", "ReceivedAt")
+                    b.HasIndex("FolioGrd", "ClienteGrd", "FechaRecep")
                         .IsUnique()
                         .HasDatabaseName("sample_unique_constraint");
 
