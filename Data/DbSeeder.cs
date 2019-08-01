@@ -1,4 +1,5 @@
 using QuimiOSHub.Models;
+using QuimiOSHub.Services;
 
 namespace QuimiOSHub.Data;
 
@@ -12,6 +13,8 @@ public static class DbSeeder
 
         Console.WriteLine("Seeding database with initial data...");
 
+        var defaultPasswordHash = AuthService.HashPassword("password");
+
         var users = new List<User>
         {
             new User
@@ -20,6 +23,7 @@ public static class DbSeeder
                 FullName = "Juan Perez",
                 Email = "jperez@lab.com",
                 Role = "Analyst",
+                PasswordHash = defaultPasswordHash,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
             },
@@ -29,6 +33,7 @@ public static class DbSeeder
                 FullName = "Maria Gomez",
                 Email = "mgomez@lab.com",
                 Role = "Supervisor",
+                PasswordHash = defaultPasswordHash,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
             },
@@ -38,6 +43,7 @@ public static class DbSeeder
                 FullName = "Roberto Lopez",
                 Email = "rlopez@lab.com",
                 Role = "Technician",
+                PasswordHash = defaultPasswordHash,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
             },
@@ -47,6 +53,7 @@ public static class DbSeeder
                 FullName = "Ana Martinez",
                 Email = "amartinez@lab.com",
                 Role = "Manager",
+                PasswordHash = defaultPasswordHash,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
             }

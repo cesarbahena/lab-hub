@@ -29,6 +29,10 @@ public class User
     [MaxLength(50)]
     public string? Role { get; set; }
 
+    [Column("password_hash")]
+    [Required]
+    public string PasswordHash { get; set; } = string.Empty;
+
     [Column("is_active")]
     public bool IsActive { get; set; } = true;
 
