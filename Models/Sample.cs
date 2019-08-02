@@ -10,55 +10,52 @@ public class Sample
     [Column("id")]
     public int Id { get; set; }
 
-    [Column("fecha_grd")]
-    public DateTime? FechaGrd { get; set; }
-
-    [Column("fecha_recep")]
-    public DateTime? FechaRecep { get; set; }
-
-    [Column("folio_grd")]
-    public int? FolioGrd { get; set; }
-
-    [Column("cliente_grd")]
-    public int? ClienteGrd { get; set; }
-
-    [Column("paciente_grd")]
-    public int? PacienteGrd { get; set; }
-
-    [Column("est_per_grd")]
-    public int? EstPerGrd { get; set; }
-
-    [Column("label1")]
-    [MaxLength(255)]
-    public string? Label1 { get; set; }
-
-    [Column("fec_cap_res")]
-    public DateTime? FecCapRes { get; set; }
-
-    [Column("fec_libera")]
-    public DateTime? FecLibera { get; set; }
-
-    [Column("suc_proc")]
-    [MaxLength(255)]
-    public string? SucProc { get; set; }
-
-    [Column("maquilador")]
-    [MaxLength(255)]
-    public string? Maquilador { get; set; }
-
-    [Column("label3")]
-    [MaxLength(255)]
-    public string? Label3 { get; set; }
-
-    [Column("fec_nac")]
-    public DateTime? FecNac { get; set; }
-
     [Column("created_at")]
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? CreatedAt { get; set; }
+
+    [Column("received_at")]
+    public DateTime? ReceivedAt { get; set; }
+
+    [Column("folio")]
+    public int? Folio { get; set; }
+
+    [Column("client_id")]
+    public int? ClientId { get; set; }
+
+    [Column("patient_id")]
+    public int? PatientId { get; set; }
+
+    [Column("exam_id")]
+    public int? ExamId { get; set; }
+
+    [Column("exam_name")]
+    [MaxLength(255)]
+    public string? ExamName { get; set; }
+
+    [Column("processed_at")]
+    public DateTime? ProcessedAt { get; set; }
+
+    [Column("validated_at")]
+    public DateTime? ValidatedAt { get; set; }
+
+    [Column("location")]
+    [MaxLength(255)]
+    public string? Location { get; set; }
+
+    [Column("outsourcer")]
+    [MaxLength(255)]
+    public string? Outsourcer { get; set; }
+
+    [Column("priority")]
+    [MaxLength(255)]
+    public string? Priority { get; set; }
+
+    [Column("birth_date")]
+    public DateTime? BirthDate { get; set; }
 
     [NotMapped]
-    public bool IsCompleted => FecLibera.HasValue;
+    public bool IsCompleted => ValidatedAt.HasValue;
 
     [NotMapped]
-    public bool IsPending => !FecLibera.HasValue;
+    public bool IsPending => !ValidatedAt.HasValue;
 }
