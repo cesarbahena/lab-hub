@@ -26,17 +26,17 @@ public class StatisticsController : ControllerBase
             samples = new
             {
                 total = await _context.Samples
-                    .Where(s => s.FechaRecep >= start && s.FechaRecep <= end)
+                    .Where(s => s.ReceivedAt >= start && s.ReceivedAt <= end)
                     .CountAsync(),
                 pending = await _context.Samples
-                    .Where(s => s.FechaRecep >= start && s.FechaRecep <= end && s.FecLibera == null)
+                    .Where(s => s.ReceivedAt >= start && s.ReceivedAt <= end && s.ValidatedAt == null)
                     .CountAsync(),
                 completed = await _context.Samples
-                    .Where(s => s.FechaRecep >= start && s.FechaRecep <= end && s.FecLibera != null)
+                    .Where(s => s.ReceivedAt >= start && s.ReceivedAt <= end && s.ValidatedAt != null)
                     .CountAsync(),
                 byClient = await _context.Samples
-                    .Where(s => s.FechaRecep >= start && s.FechaRecep <= end)
-                    .GroupBy(s => s.ClienteGrd)
+                    .Where(s => s.ReceivedAt >= start && s.ReceivedAt <= end)
+                    .GroupBy(s => s.ClientId)
                     .Select(g => new { clientId = g.Key, count = g.Count() })
                     .OrderByDescending(x => x.count)
                     .Take(10)
@@ -83,14 +83,14 @@ public class StatisticsController : ControllerBase
         var startDate = DateTime.UtcNow.AddDays(-days);
 
         var dailyStats = await _context.Samples
-            .Where(s => s.FechaRecep != null && s.FechaRecep >= startDate)
-            .GroupBy(s => s.FechaRecep.Value.Date)
+            .Where(s => s.ReceivedAt != null && s.ReceivedAt >= startDate)
+            .GroupBy(s => s.ReceivedAt.Value.Date)
             .Select(g => new
             {
                 date = g.Key,
                 total = g.Count(),
-                completed = g.Count(s => s.FecLibera != null),
-                pending = g.Count(s => s.FecLibera == null)
+                completed = g.Count(s => s.ValidatedAt != null),
+                pending = g.Count(s => s.ValidatedAt == null)
             })
             .OrderBy(x => x.date)
             .ToListAsync();

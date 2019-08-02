@@ -27,68 +27,72 @@ public class SampleService : ISampleService
     public async Task<IEnumerable<Sample>> GetPendingSamplesAsync()
     {
         return await _context.Samples
-            .Where(s => s.FecLibera == null)
-            .OrderBy(s => s.FechaRecep)
+            .Where(s => s.ValidatedAt == null)
+            .OrderBy(s => s.ReceivedAt)
             .ToListAsync();
     }
 
     public async Task<IEnumerable<Sample>> FilterSamplesAsync(
-        int? clienteGrd,
-        DateTime? fechaInicio,
-        DateTime? fechaFin)
+        int? clientId,
+        DateTime? startDate,
+        DateTime? endDate)
     {
         var query = _context.Samples.AsQueryable();
 
-        if (clienteGrd.HasValue)
+        if (clientId.HasValue)
         {
-            query = query.Where(s => s.ClienteGrd == clienteGrd.Value);
+            query = query.Where(s => s.ClientId == clientId.Value);
         }
 
-        if (fechaInicio.HasValue)
+        if (startDate.HasValue)
         {
-            query = query.Where(s => s.FechaRecep >= fechaInicio.Value);
+            query = query.Where(s => s.ReceivedAt >= startDate.Value);
         }
 
-        if (fechaFin.HasValue)
+        if (endDate.HasValue)
         {
-            query = query.Where(s => s.FechaRecep <= fechaFin.Value);
+            query = query.Where(s => s.ReceivedAt <= endDate.Value);
         }
 
-        return await query.OrderByDescending(s => s.FechaRecep).ToListAsync();
+        return await query.OrderByDescending(s => s.ReceivedAt).ToListAsync();
     }
 
     public async Task<(List<SampleDto> Samples, int Total, int TotalPages)> GetPaginatedSamplesAsync(
-        int? clienteGrd, DateTime? startDate, DateTime? endDate, int page, int pageSize)
+        int? clientId, DateTime? startDate, DateTime? endDate, int page, int pageSize)
     {
         var query = _context.Samples.AsQueryable();
 
-        if (clienteGrd.HasValue)
-            query = query.Where(s => s.ClienteGrd == clienteGrd.Value);
+        if (clientId.HasValue)
+            query = query.Where(s => s.ClientId == clientId.Value);
 
         if (startDate.HasValue)
-            query = query.Where(s => s.FechaRecep >= startDate.Value);
+            query = query.Where(s => s.ReceivedAt >= startDate.Value);
 
         if (endDate.HasValue)
-            query = query.Where(s => s.FechaRecep <= endDate.Value);
+            query = query.Where(s => s.ReceivedAt <= endDate.Value);
 
         var total = await query.CountAsync();
 
         var samples = await query
-            .OrderByDescending(s => s.FechaRecep)
+            .OrderByDescending(s => s.ReceivedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(s => new SampleDto
             {
                 Id = s.Id,
-                FechaGrd = s.FechaGrd,
-                FechaRecep = s.FechaRecep,
-                FolioGrd = s.FolioGrd,
-                ClienteGrd = s.ClienteGrd,
-                PacienteGrd = s.PacienteGrd,
-                Label1 = s.Label1,
-                FecCapRes = s.FecCapRes,
-                FecLibera = s.FecLibera,
-                SucProc = s.SucProc
+                CreatedAt = s.CreatedAt,
+                ReceivedAt = s.ReceivedAt,
+                Folio = s.Folio,
+                ClientId = s.ClientId,
+                PatientId = s.PatientId,
+                ExamId = s.ExamId,
+                ExamName = s.ExamName,
+                ProcessedAt = s.ProcessedAt,
+                ValidatedAt = s.ValidatedAt,
+                Location = s.Location,
+                Outsourcer = s.Outsourcer,
+                Priority = s.Priority,
+                BirthDate = s.BirthDate
             })
             .ToListAsync();
 
@@ -103,14 +107,14 @@ public class SampleService : ISampleService
         var query = _context.Samples.AsQueryable();
 
         if (startDate.HasValue)
-            query = query.Where(s => s.FechaRecep >= startDate.Value);
+            query = query.Where(s => s.ReceivedAt >= startDate.Value);
 
         if (endDate.HasValue)
-            query = query.Where(s => s.FechaRecep <= endDate.Value);
+            query = query.Where(s => s.ReceivedAt <= endDate.Value);
 
         var total = await query.CountAsync();
-        var pending = await query.Where(s => s.FecLibera == null).CountAsync();
-        var completed = await query.Where(s => s.FecLibera != null).CountAsync();
+        var pending = await query.Where(s => s.ValidatedAt == null).CountAsync();
+        var completed = await query.Where(s => s.ValidatedAt != null).CountAsync();
 
         return new Dictionary<string, int>
         {
@@ -123,6 +127,6 @@ public class SampleService : ISampleService
     public async Task<bool> IsSamplePendingAsync(int sampleId)
     {
         var sample = await _context.Samples.FindAsync(sampleId);
-        return sample != null && sample.FecLibera == null;
+        return sample != null && sample.ValidatedAt == null;
     }
 }

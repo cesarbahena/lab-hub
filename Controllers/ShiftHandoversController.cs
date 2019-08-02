@@ -50,7 +50,7 @@ public class ShiftHandoversController : ControllerBase
                 PendingSamples = sh.PendingSamples.Select(ps => new PendingSampleDto
                 {
                     SampleId = ps.SampleId,
-                    FolioGrd = ps.Sample.FolioGrd,
+                    Folio = ps.Sample.Folio,
                     Reason = ps.Reason
                 }).ToList()
             })
@@ -81,7 +81,7 @@ public class ShiftHandoversController : ControllerBase
                 PendingSamples = sh.PendingSamples.Select(ps => new PendingSampleDto
                 {
                     SampleId = ps.SampleId,
-                    FolioGrd = ps.Sample.FolioGrd,
+                    Folio = ps.Sample.Folio,
                     Reason = ps.Reason
                 }).ToList()
             })

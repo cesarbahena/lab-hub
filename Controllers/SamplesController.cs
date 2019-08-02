@@ -30,7 +30,7 @@ public class SamplesController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult> GetSamples(
-        [FromQuery] int? clienteGrd = null,
+        [FromQuery] int? clientId = null,
         [FromQuery] DateTime? startDate = null,
         [FromQuery] DateTime? endDate = null,
         [FromQuery] int page = 1,
@@ -41,33 +41,37 @@ public class SamplesController : ControllerBase
 
         var query = _context.Samples.AsQueryable();
 
-        if (clienteGrd.HasValue)
-            query = query.Where(s => s.ClienteGrd == clienteGrd.Value);
+        if (clientId.HasValue)
+            query = query.Where(s => s.ClientId == clientId.Value);
 
         if (startDate.HasValue)
-            query = query.Where(s => s.FechaRecep >= startDate.Value);
+            query = query.Where(s => s.ReceivedAt >= startDate.Value);
 
         if (endDate.HasValue)
-            query = query.Where(s => s.FechaRecep <= endDate.Value);
+            query = query.Where(s => s.ReceivedAt <= endDate.Value);
 
         var total = await query.CountAsync();
 
         var samples = await query
-            .OrderByDescending(s => s.FechaRecep)
+            .OrderByDescending(s => s.ReceivedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(s => new SampleDto
             {
                 Id = s.Id,
-                FechaGrd = s.FechaGrd,
-                FechaRecep = s.FechaRecep,
-                FolioGrd = s.FolioGrd,
-                ClienteGrd = s.ClienteGrd,
-                PacienteGrd = s.PacienteGrd,
-                Label1 = s.Label1,
-                FecCapRes = s.FecCapRes,
-                FecLibera = s.FecLibera,
-                SucProc = s.SucProc
+                CreatedAt = s.CreatedAt,
+                ReceivedAt = s.ReceivedAt,
+                Folio = s.Folio,
+                ClientId = s.ClientId,
+                PatientId = s.PatientId,
+                ExamId = s.ExamId,
+                ExamName = s.ExamName,
+                ProcessedAt = s.ProcessedAt,
+                ValidatedAt = s.ValidatedAt,
+                Location = s.Location,
+                Outsourcer = s.Outsourcer,
+                Priority = s.Priority,
+                BirthDate = s.BirthDate
             })
             .ToListAsync();
 
@@ -89,15 +93,19 @@ public class SamplesController : ControllerBase
             .Select(s => new SampleDto
             {
                 Id = s.Id,
-                FechaGrd = s.FechaGrd,
-                FechaRecep = s.FechaRecep,
-                FolioGrd = s.FolioGrd,
-                ClienteGrd = s.ClienteGrd,
-                PacienteGrd = s.PacienteGrd,
-                Label1 = s.Label1,
-                FecCapRes = s.FecCapRes,
-                FecLibera = s.FecLibera,
-                SucProc = s.SucProc
+                CreatedAt = s.CreatedAt,
+                ReceivedAt = s.ReceivedAt,
+                Folio = s.Folio,
+                ClientId = s.ClientId,
+                PatientId = s.PatientId,
+                ExamId = s.ExamId,
+                ExamName = s.ExamName,
+                ProcessedAt = s.ProcessedAt,
+                ValidatedAt = s.ValidatedAt,
+                Location = s.Location,
+                Outsourcer = s.Outsourcer,
+                Priority = s.Priority,
+                BirthDate = s.BirthDate
             })
             .FirstOrDefaultAsync();
 
@@ -111,20 +119,24 @@ public class SamplesController : ControllerBase
     public async Task<ActionResult<IEnumerable<SampleDto>>> GetPendingSamples()
     {
         var samples = await _context.Samples
-            .Where(s => s.FecLibera == null)
-            .OrderBy(s => s.FechaRecep)
+            .Where(s => s.ValidatedAt == null)
+            .OrderBy(s => s.ReceivedAt)
             .Select(s => new SampleDto
             {
                 Id = s.Id,
-                FechaGrd = s.FechaGrd,
-                FechaRecep = s.FechaRecep,
-                FolioGrd = s.FolioGrd,
-                ClienteGrd = s.ClienteGrd,
-                PacienteGrd = s.PacienteGrd,
-                Label1 = s.Label1,
-                FecCapRes = s.FecCapRes,
-                FecLibera = s.FecLibera,
-                SucProc = s.SucProc
+                CreatedAt = s.CreatedAt,
+                ReceivedAt = s.ReceivedAt,
+                Folio = s.Folio,
+                ClientId = s.ClientId,
+                PatientId = s.PatientId,
+                ExamId = s.ExamId,
+                ExamName = s.ExamName,
+                ProcessedAt = s.ProcessedAt,
+                ValidatedAt = s.ValidatedAt,
+                Location = s.Location,
+                Outsourcer = s.Outsourcer,
+                Priority = s.Priority,
+                BirthDate = s.BirthDate
             })
             .ToListAsync();
 
@@ -150,27 +162,27 @@ public class SamplesController : ControllerBase
         Sample? sample = null;
         bool isNew = true;
 
-        // Check if sample already exists by FolioGrd (unique identifier)
-        if (dto.FolioGrd.HasValue)
+        // Check if sample already exists by Folio (unique identifier)
+        if (dto.Folio.HasValue)
         {
-            sample = await _context.Samples.FirstOrDefaultAsync(s => s.FolioGrd == dto.FolioGrd.Value);
+            sample = await _context.Samples.FirstOrDefaultAsync(s => s.Folio == dto.Folio.Value);
 
             if (sample != null)
             {
                 // Update existing sample
                 isNew = false;
-                sample.FechaGrd = ToUtc(dto.FechaGrd);
-                sample.FechaRecep = ToUtc(dto.FechaRecep);
-                sample.ClienteGrd = dto.ClienteGrd;
-                sample.PacienteGrd = dto.PacienteGrd;
-                sample.EstPerGrd = dto.EstPerGrd;
-                sample.Label1 = dto.Label1;
-                sample.FecCapRes = ToUtc(dto.FecCapRes);
-                sample.FecLibera = ToUtc(dto.FecLibera);
-                sample.SucProc = dto.SucProc;
-                sample.Maquilador = dto.Maquilador;
-                sample.Label3 = dto.Label3;
-                sample.FecNac = ToUtc(dto.FecNac);
+                sample.CreatedAt = ToUtc(dto.CreatedAt);
+                sample.ReceivedAt = ToUtc(dto.ReceivedAt);
+                sample.ClientId = dto.ClientId;
+                sample.PatientId = dto.PatientId;
+                sample.ExamId = dto.ExamId;
+                sample.ExamName = dto.ExamName;
+                sample.ProcessedAt = ToUtc(dto.ProcessedAt);
+                sample.ValidatedAt = ToUtc(dto.ValidatedAt);
+                sample.Location = dto.Location;
+                sample.Outsourcer = dto.Outsourcer;
+                sample.Priority = dto.Priority;
+                sample.BirthDate = ToUtc(dto.BirthDate);
             }
         }
 
@@ -179,20 +191,19 @@ public class SamplesController : ControllerBase
         {
             sample = new Sample
             {
-                FechaGrd = ToUtc(dto.FechaGrd),
-                FechaRecep = ToUtc(dto.FechaRecep),
-                FolioGrd = dto.FolioGrd,
-                ClienteGrd = dto.ClienteGrd,
-                PacienteGrd = dto.PacienteGrd,
-                EstPerGrd = dto.EstPerGrd,
-                Label1 = dto.Label1,
-                FecCapRes = ToUtc(dto.FecCapRes),
-                FecLibera = ToUtc(dto.FecLibera),
-                SucProc = dto.SucProc,
-                Maquilador = dto.Maquilador,
-                Label3 = dto.Label3,
-                FecNac = ToUtc(dto.FecNac),
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = ToUtc(dto.CreatedAt),
+                ReceivedAt = ToUtc(dto.ReceivedAt),
+                Folio = dto.Folio,
+                ClientId = dto.ClientId,
+                PatientId = dto.PatientId,
+                ExamId = dto.ExamId,
+                ExamName = dto.ExamName,
+                ProcessedAt = ToUtc(dto.ProcessedAt),
+                ValidatedAt = ToUtc(dto.ValidatedAt),
+                Location = dto.Location,
+                Outsourcer = dto.Outsourcer,
+                Priority = dto.Priority,
+                BirthDate = ToUtc(dto.BirthDate)
             };
             _context.Samples.Add(sample);
         }
@@ -202,15 +213,19 @@ public class SamplesController : ControllerBase
         var result = new SampleDto
         {
             Id = sample.Id,
-            FechaGrd = sample.FechaGrd,
-            FechaRecep = sample.FechaRecep,
-            FolioGrd = sample.FolioGrd,
-            ClienteGrd = sample.ClienteGrd,
-            PacienteGrd = sample.PacienteGrd,
-            Label1 = sample.Label1,
-            FecCapRes = sample.FecCapRes,
-            FecLibera = sample.FecLibera,
-            SucProc = sample.SucProc
+            CreatedAt = sample.CreatedAt,
+            ReceivedAt = sample.ReceivedAt,
+            Folio = sample.Folio,
+            ClientId = sample.ClientId,
+            PatientId = sample.PatientId,
+            ExamId = sample.ExamId,
+            ExamName = sample.ExamName,
+            ProcessedAt = sample.ProcessedAt,
+            ValidatedAt = sample.ValidatedAt,
+            Location = sample.Location,
+            Outsourcer = sample.Outsourcer,
+            Priority = sample.Priority,
+            BirthDate = sample.BirthDate
         };
 
         if (isNew)

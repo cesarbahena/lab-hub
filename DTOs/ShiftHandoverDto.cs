@@ -18,7 +18,7 @@ public class ShiftHandoverDto
 public class PendingSampleDto
 {
     public int SampleId { get; set; }
-    public int? FolioGrd { get; set; }
+    public int? Folio { get; set; }
     public string? Reason { get; set; }
 }
 
@@ -44,7 +44,7 @@ public class CreatePendingSampleDto
     [Required]
     public int SampleId { get; set; }
 
-    public int? FolioGrd { get; set; }
+    public int? Folio { get; set; }
 
     [MaxLength(500)]
     public string? Reason { get; set; }
