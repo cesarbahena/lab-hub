@@ -50,7 +50,7 @@ public static class DatabaseExtensions
                 status.SampleCount = await context.Samples.CountAsync();
                 status.UserCount = await context.Users.CountAsync();
                 status.InventoryItemCount = await context.InventoryItems.CountAsync();
-                status.PendingSampleCount = await context.Samples.CountAsync(s => s.FecLibera == null);
+                status.PendingSampleCount = await context.Samples.CountAsync(s => s.ValidatedAt == null);
                 status.IsHealthy = true;
             }
         }

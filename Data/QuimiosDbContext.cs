@@ -27,7 +27,7 @@ public class QuimiosDbContext : DbContext
 
         // Configure Sample unique constraint (matching ETL)
         modelBuilder.Entity<Sample>()
-            .HasIndex(s => new { s.FolioGrd, s.ClienteGrd, s.FechaRecep })
+            .HasIndex(s => new { s.Folio, s.ClientId, s.ReceivedAt })
             .IsUnique()
             .HasDatabaseName("sample_unique_constraint");
 
@@ -43,10 +43,10 @@ public class QuimiosDbContext : DbContext
 
         // Add performance indexes
         modelBuilder.Entity<Sample>()
-            .HasIndex(s => s.FechaRecep);
+            .HasIndex(s => s.ReceivedAt);
 
         modelBuilder.Entity<Sample>()
-            .HasIndex(s => s.ClienteGrd);
+            .HasIndex(s => s.ClientId);
 
         modelBuilder.Entity<InventoryItem>()
             .HasIndex(i => i.Category);

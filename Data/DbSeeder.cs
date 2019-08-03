@@ -15,6 +15,7 @@ public static class DbSeeder
         {
             await SeedUsersAsync(context, logger);
             await SeedShiftsAsync(context, logger);
+            await SeedInventoryItemsAsync(context, logger);
             await SeedSamplesFromCsvAsync(context, logger);
 
             logger.LogInformation("Database seeding completed successfully");
@@ -142,6 +143,92 @@ public static class DbSeeder
         logger.LogInformation("Seeded {Count} shifts", shifts.Count);
     }
 
+    private static async Task SeedInventoryItemsAsync(QuimiosDbContext context, ILogger logger)
+    {
+        if (await context.InventoryItems.AnyAsync())
+        {
+            logger.LogInformation("Inventory items already exist, skipping");
+            return;
+        }
+
+        logger.LogInformation("Seeding inventory items from QuimiOSCompanion quimios-names.js...");
+
+        var items = new List<InventoryItem>
+        {
+            // Hormones
+            new InventoryItem { Code = "AFP_MTY", Name = "AFP", Category = "Hormones", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 },
+            new InventoryItem { Code = "BHCGMTY", Name = "BETA-HCG", Category = "Hormones", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 },
+            new InventoryItem { Code = "CORSMTY", Name = "CORTISOL-OR", Category = "Hormones", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "E2MTY", Name = "E2", Category = "Hormones", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "FSHMTY", Name = "FSH", Category = "Hormones", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "INSULMTY", Name = "INSULINA", Category = "Hormones", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "LHMTY", Name = "LH", Category = "Hormones", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "PROGMTY", Name = "PROG", Category = "Hormones", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "PROLMTY", Name = "PROL", Category = "Hormones", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "TETOTMTY", Name = "TEST-TOTAL", Category = "Hormones", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "TSHMTY", Name = "TSH", Category = "Hormones", Unit = "test", CurrentStock = 150, MinStock = 30, MaxStock = 300 },
+            new InventoryItem { Code = "TUMTY", Name = "TU", Category = "Hormones", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "T3LIBMTY", Name = "T3-LIBRE", Category = "Hormones", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "T3TOTMTY", Name = "T3-TOTAL", Category = "Hormones", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "T4LIBMTY", Name = "T4-LIBRE", Category = "Hormones", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 },
+            new InventoryItem { Code = "T4TOTMTY", Name = "T4-TOTAL", Category = "Hormones", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+
+            // Tumor Markers
+            new InventoryItem { Code = "CA125MTY", Name = "CA-125", Category = "Tumor Markers", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "CA153MTY", Name = "CA-153", Category = "Tumor Markers", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "CA199MTY", Name = "CA-199", Category = "Tumor Markers", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "CEA2MTY", Name = "CEA2", Category = "Tumor Markers", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "PSALIBMT", Name = "PSA-LIBRE", Category = "Tumor Markers", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 },
+            new InventoryItem { Code = "PSATOTMT", Name = "PSA-TOTAL", Category = "Tumor Markers", Unit = "test", CurrentStock = 150, MinStock = 30, MaxStock = 300 },
+
+            // Chemistry
+            new InventoryItem { Code = "ACVALPMT", Name = "AC. VALP", Category = "Chemistry", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "ACURIMTY", Name = "AC. URICO-S", Category = "Chemistry", Unit = "test", CurrentStock = 150, MinStock = 30, MaxStock = 300 },
+            new InventoryItem { Code = "ALBMTY", Name = "ALBUMINA-SUERO", Category = "Chemistry", Unit = "test", CurrentStock = 150, MinStock = 30, MaxStock = 300 },
+            new InventoryItem { Code = "AMIMTY", Name = "AMILASA-S", Category = "Chemistry", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 },
+            new InventoryItem { Code = "BILIDMTY", Name = "BILIRR-DIR", Category = "Chemistry", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 },
+            new InventoryItem { Code = "BILITMTY", Name = "BILIRR-TOT", Category = "Chemistry", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 },
+            new InventoryItem { Code = "CA-SMTY", Name = "Ca-S", Category = "Chemistry", Unit = "test", CurrentStock = 150, MinStock = 30, MaxStock = 300 },
+            new InventoryItem { Code = "CLOMTY", Name = "CLORO-S", Category = "Chemistry", Unit = "test", CurrentStock = 200, MinStock = 40, MaxStock = 400 },
+            new InventoryItem { Code = "COLHMTY", Name = "COLEST-HDL", Category = "Chemistry", Unit = "test", CurrentStock = 200, MinStock = 40, MaxStock = 400 },
+            new InventoryItem { Code = "COLTMTY", Name = "COLEST-TOT", Category = "Chemistry", Unit = "test", CurrentStock = 200, MinStock = 40, MaxStock = 400 },
+            new InventoryItem { Code = "CREAMTY", Name = "CREATININA-S", Category = "Chemistry", Unit = "test", CurrentStock = 200, MinStock = 40, MaxStock = 400 },
+            new InventoryItem { Code = "C3_MTY", Name = "C3", Category = "Immunology", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "C4_MTY", Name = "C4", Category = "Immunology", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "DHLMTY", Name = "DHL", Category = "Enzymes", Unit = "test", CurrentStock = 150, MinStock = 30, MaxStock = 300 },
+            new InventoryItem { Code = "FESMTY", Name = "FE SERICO", Category = "Chemistry", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 },
+            new InventoryItem { Code = "FOSFAMTY", Name = "FOSF-ALCAL", Category = "Enzymes", Unit = "test", CurrentStock = 150, MinStock = 30, MaxStock = 300 },
+            new InventoryItem { Code = "FOSFMTY", Name = "FOSFOR-S", Category = "Chemistry", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 },
+            new InventoryItem { Code = "GGTPMTY", Name = "GGTP", Category = "Enzymes", Unit = "test", CurrentStock = 150, MinStock = 30, MaxStock = 300 },
+            new InventoryItem { Code = "GLUMTY", Name = "GLUCOSA-S", Category = "Chemistry", Unit = "test", CurrentStock = 300, MinStock = 60, MaxStock = 600 },
+            new InventoryItem { Code = "IgA_MTY", Name = "IgA", Category = "Immunology", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "IgG_MTY", Name = "IgG", Category = "Immunology", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "IgM_MTY", Name = "IgM", Category = "Immunology", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "IgE_MTY", Name = "IgE", Category = "Immunology", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "LIPASAMT", Name = "LIPASA", Category = "Enzymes", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 },
+            new InventoryItem { Code = "MGSMTY", Name = "Mg-SERICO", Category = "Chemistry", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 },
+            new InventoryItem { Code = "NITROMTY", Name = "NITROG URE", Category = "Chemistry", Unit = "test", CurrentStock = 150, MinStock = 30, MaxStock = 300 },
+            new InventoryItem { Code = "PCRCUMTY", Name = "PCR-ULTRA", Category = "Immunology", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 },
+            new InventoryItem { Code = "PCRULMTY", Name = "PCR-ULTRA", Category = "Immunology", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 },
+            new InventoryItem { Code = "POTMTY", Name = "CLORO-S", Category = "Chemistry", Unit = "test", CurrentStock = 200, MinStock = 40, MaxStock = 400 },
+            new InventoryItem { Code = "PRTTSMTY", Name = "PROT-TOT-S", Category = "Chemistry", Unit = "test", CurrentStock = 150, MinStock = 30, MaxStock = 300 },
+            new InventoryItem { Code = "SODMTY", Name = "CLORO-S", Category = "Chemistry", Unit = "test", CurrentStock = 200, MinStock = 40, MaxStock = 400 },
+            new InventoryItem { Code = "TGOMTY", Name = "TGO", Category = "Enzymes", Unit = "test", CurrentStock = 200, MinStock = 40, MaxStock = 400 },
+            new InventoryItem { Code = "TGPMTY", Name = "TGP", Category = "Enzymes", Unit = "test", CurrentStock = 200, MinStock = 40, MaxStock = 400 },
+            new InventoryItem { Code = "TRF_MTY", Name = "TRF", Category = "Chemistry", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "TRIGLMTY", Name = "TRIGLICERIDOS", Category = "Chemistry", Unit = "test", CurrentStock = 200, MinStock = 40, MaxStock = 400 },
+            new InventoryItem { Code = "UIBCMTY", Name = "CAP. FIJ. Fe", Category = "Chemistry", Unit = "test", CurrentStock = 50, MinStock = 10, MaxStock = 100 },
+            new InventoryItem { Code = "FERR_MTY", Name = "FERR", Category = "Chemistry", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 },
+            new InventoryItem { Code = "HBGLMTY", Name = "Hb-GLIC", Category = "Chemistry", Unit = "test", CurrentStock = 150, MinStock = 30, MaxStock = 300 },
+            new InventoryItem { Code = "DIMEMTY", Name = "DIMERO D", Category = "Coagulation", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 }
+        };
+
+        context.InventoryItems.AddRange(items);
+        await context.SaveChangesAsync();
+
+        logger.LogInformation("Seeded {Count} inventory items from QuimiOSCompanion", items.Count);
+    }
+
     private static async Task SeedSamplesFromCsvAsync(QuimiosDbContext context, ILogger logger)
     {
         if (await context.Samples.AnyAsync())
@@ -152,85 +239,248 @@ public static class DbSeeder
 
         logger.LogInformation("Seeding samples from Muestras.csv structure...");
 
-        // Simulate data that would come from ETL scraper
-        var samples = new List<Sample>
+        var samples = new List<Sample>();
+        var baseDate = DateTime.UtcNow.AddDays(-3);
+
+        // Completed samples (for reference)
+        samples.AddRange(new[]
         {
             new Sample
             {
-                FechaGrd = new DateTime(2023, 2, 1, 10, 0, 0, DateTimeKind.Utc),
-                FechaRecep = new DateTime(2023, 2, 1, 11, 0, 0, DateTimeKind.Utc),
-                FolioGrd = 12345,
-                ClienteGrd = 101,
-                PacienteGrd = 202,
-                EstPerGrd = 303,
-                Label1 = "Some Label 1",
-                FecCapRes = new DateTime(2023, 2, 1, 12, 0, 0, DateTimeKind.Utc),
-                FecLibera = new DateTime(2023, 2, 1, 13, 0, 0, DateTimeKind.Utc),
-                SucProc = "Branch A",
-                Maquilador = "Maq X",
-                Label3 = "Some Label 3",
-                FecNac = new DateTime(1990, 5, 15, 0, 0, 0, DateTimeKind.Utc),
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = baseDate.AddDays(-10).AddHours(9).AddMinutes(15),
+                ReceivedAt = baseDate.AddDays(-10).AddHours(10).AddMinutes(30),
+                Folio = 20001,
+                ClientId = 101,
+                PatientId = 1001,
+                ExamId = 303,
+                ExamName = "Quimica Sanguinea",
+                ProcessedAt = baseDate.AddDays(-10).AddHours(14).AddMinutes(20),
+                ValidatedAt = baseDate.AddDays(-10).AddHours(16).AddMinutes(45),
+                Location = "Monterrey",
+                Outsourcer = "Quest Labs",
+                Priority = "Normal",
+                BirthDate = new DateTime(1985, 3, 15, 0, 0, 0, DateTimeKind.Utc)
             },
             new Sample
             {
-                FechaGrd = new DateTime(2023, 2, 2, 9, 30, 0, DateTimeKind.Utc),
-                FechaRecep = new DateTime(2023, 2, 2, 10, 30, 0, DateTimeKind.Utc),
-                FolioGrd = 12346,
-                ClienteGrd = 102,
-                PacienteGrd = 203,
-                EstPerGrd = 304,
-                Label1 = "Another Label 1",
-                FecCapRes = new DateTime(2023, 2, 2, 11, 30, 0, DateTimeKind.Utc),
-                FecLibera = new DateTime(2023, 2, 2, 12, 30, 0, DateTimeKind.Utc),
-                SucProc = "Branch B",
-                Maquilador = "Maq Y",
-                Label3 = "Another Label 3",
-                FecNac = new DateTime(1985, 10, 20, 0, 0, 0, DateTimeKind.Utc),
-                CreatedAt = DateTime.UtcNow
-            },
-            // PENDING SAMPLES (FecLibera = null)
-            new Sample
-            {
-                FechaGrd = DateTime.UtcNow.AddDays(-2),
-                FechaRecep = DateTime.UtcNow.AddDays(-2).AddHours(1),
-                FolioGrd = 12347,
-                ClienteGrd = 101,
-                PacienteGrd = 204,
-                EstPerGrd = 305,
-                Label1 = "Pending Sample 1",
-                FecCapRes = DateTime.UtcNow.AddDays(-1),
-                FecLibera = null,  // PENDING
-                SucProc = "Branch A",
-                Maquilador = "Maq X",
-                Label3 = "Pending",
-                FecNac = new DateTime(1992, 3, 10, 0, 0, 0, DateTimeKind.Utc),
-                CreatedAt = DateTime.UtcNow
-            },
-            new Sample
-            {
-                FechaGrd = DateTime.UtcNow.AddDays(-1),
-                FechaRecep = DateTime.UtcNow.AddDays(-1).AddHours(2),
-                FolioGrd = 12348,
-                ClienteGrd = 102,
-                PacienteGrd = 205,
-                EstPerGrd = 306,
-                Label1 = "Pending Sample 2",
-                FecCapRes = null,
-                FecLibera = null,  // PENDING
-                SucProc = "Branch B",
-                Maquilador = "Maq Y",
-                Label3 = "Pending",
-                FecNac = new DateTime(1988, 7, 25, 0, 0, 0, DateTimeKind.Utc),
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = baseDate.AddDays(-8).AddHours(10).AddMinutes(45),
+                ReceivedAt = baseDate.AddDays(-8).AddHours(11).AddMinutes(20),
+                Folio = 20002,
+                ClientId = 102,
+                PatientId = 1002,
+                ExamId = 304,
+                ExamName = "Perfil Tiroideo",
+                ProcessedAt = baseDate.AddDays(-8).AddHours(13).AddMinutes(10),
+                ValidatedAt = baseDate.AddDays(-8).AddHours(15).AddMinutes(30),
+                Location = "Celaya",
+                Outsourcer = "LabCorp",
+                Priority = "Normal",
+                BirthDate = new DateTime(1990, 7, 22, 0, 0, 0, DateTimeKind.Utc),
             }
-        };
+        });
+
+        // PENDING SAMPLES - 12 samples for ShiftCheck testing
+        samples.AddRange(new[]
+        {
+            new Sample
+            {
+                CreatedAt = baseDate.AddHours(8).AddMinutes(30),
+                ReceivedAt = baseDate.AddHours(9).AddMinutes(15),
+                Folio = 20101,
+                ClientId = 101,
+                PatientId = 2001,
+                ExamId = 305,
+                ExamName = "Biometria Hematica",
+                ProcessedAt = baseDate.AddHours(11).AddMinutes(45),
+                ValidatedAt = null,
+                Location = "Monterrey",
+                Outsourcer = "Quest Labs",
+                Priority = "Urgente",
+                BirthDate = new DateTime(1978, 5, 10, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Sample
+            {
+                CreatedAt = baseDate.AddHours(9).AddMinutes(20),
+                ReceivedAt = baseDate.AddHours(10).AddMinutes(5),
+                Folio = 20102,
+                ClientId = 102,
+                PatientId = 2002,
+                ExamId = 306,
+                ExamName = "Glucosa",
+                ProcessedAt = baseDate.AddHours(12).AddMinutes(30),
+                ValidatedAt = null,
+                Location = "Celaya",
+                Outsourcer = "LabCorp",
+                Priority = "Normal",
+                BirthDate = new DateTime(1992, 11, 8, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Sample
+            {
+                CreatedAt = baseDate.AddDays(1).AddHours(7).AddMinutes(45),
+                ReceivedAt = baseDate.AddDays(1).AddHours(8).AddMinutes(30),
+                Folio = 20103,
+                ClientId = 101,
+                PatientId = 2003,
+                ExamId = 307,
+                ExamName = "Perfil Hepatico",
+                ProcessedAt = null,
+                ValidatedAt = null,
+                Location = "Monterrey",
+                Outsourcer = "Quest Labs",
+                Priority = "Normal",
+                BirthDate = new DateTime(1965, 2, 14, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Sample
+            {
+                CreatedAt = baseDate.AddDays(1).AddHours(10).AddMinutes(10),
+                ReceivedAt = baseDate.AddDays(1).AddHours(11).AddMinutes(0),
+                Folio = 20104,
+                ClientId = 103,
+                PatientId = 2004,
+                ExamId = 308,
+                ExamName = "Examen General de Orina",
+                ProcessedAt = baseDate.AddDays(1).AddHours(13).AddMinutes(20),
+                ValidatedAt = null,
+                Location = "Tijuana",
+                Outsourcer = "Maq X",
+                Priority = "Stat",
+                BirthDate = new DateTime(1988, 9, 3, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Sample
+            {
+                CreatedAt = baseDate.AddDays(1).AddHours(14).AddMinutes(25),
+                ReceivedAt = baseDate.AddDays(1).AddHours(15).AddMinutes(10),
+                Folio = 20105,
+                ClientId = 102,
+                PatientId = 2005,
+                ExamId = 309,
+                ExamName = "Creatinina",
+                ProcessedAt = null,
+                ValidatedAt = null,
+                Location = "Celaya",
+                Outsourcer = "LabCorp",
+                Priority = "Normal",
+                BirthDate = new DateTime(1995, 6, 18, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Sample
+            {
+                CreatedAt = baseDate.AddDays(2).AddHours(8).AddMinutes(0),
+                ReceivedAt = baseDate.AddDays(2).AddHours(9).AddMinutes(0),
+                Folio = 20106,
+                ClientId = 104,
+                PatientId = 2006,
+                ExamId = 310,
+                ExamName = "Colesterol Total",
+                ProcessedAt = baseDate.AddDays(2).AddHours(11).AddMinutes(15),
+                ValidatedAt = null,
+                Location = "Puebla",
+                Outsourcer = "Maq Y",
+                Priority = "Normal",
+                BirthDate = new DateTime(1982, 1, 27, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Sample
+            {
+                CreatedAt = baseDate.AddDays(2).AddHours(9).AddMinutes(40),
+                ReceivedAt = baseDate.AddDays(2).AddHours(10).AddMinutes(30),
+                Folio = 20107,
+                ClientId = 101,
+                PatientId = 2007,
+                ExamId = 311,
+                ExamName = "Trigliceridos",
+                ProcessedAt = baseDate.AddDays(2).AddHours(12).AddMinutes(45),
+                ValidatedAt = null,
+                Location = "Monterrey",
+                Outsourcer = "Quest Labs",
+                Priority = "Urgente",
+                BirthDate = new DateTime(1970, 12, 5, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Sample
+            {
+                CreatedAt = baseDate.AddDays(2).AddHours(13).AddMinutes(15),
+                ReceivedAt = baseDate.AddDays(2).AddHours(14).AddMinutes(5),
+                Folio = 20108,
+                ClientId = 105,
+                PatientId = 2008,
+                ExamId = 312,
+                ExamName = "TSH",
+                ProcessedAt = null,
+                ValidatedAt = null,
+                Location = "Merida",
+                Outsourcer = "Maq Z",
+                Priority = "Normal",
+                BirthDate = new DateTime(1987, 4, 11, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Sample
+            {
+                CreatedAt = baseDate.AddDays(2).AddHours(15).AddMinutes(50),
+                ReceivedAt = baseDate.AddDays(2).AddHours(16).AddMinutes(20),
+                Folio = 20109,
+                ClientId = 102,
+                PatientId = 2009,
+                ExamId = 313,
+                ExamName = "Acido Urico",
+                ProcessedAt = null,
+                ValidatedAt = null,
+                Location = "Celaya",
+                Outsourcer = "LabCorp",
+                Priority = "Normal",
+                BirthDate = new DateTime(1993, 8, 29, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Sample
+            {
+                CreatedAt = baseDate.AddDays(3).AddHours(7).AddMinutes(20),
+                ReceivedAt = baseDate.AddDays(3).AddHours(8).AddMinutes(10),
+                Folio = 20110,
+                ClientId = 103,
+                PatientId = 2010,
+                ExamId = 314,
+                ExamName = "PSA Total",
+                ProcessedAt = baseDate.AddDays(3).AddHours(10).AddMinutes(30),
+                ValidatedAt = null,
+                Location = "Tijuana",
+                Outsourcer = "Maq X",
+                Priority = "Stat",
+                BirthDate = new DateTime(1960, 3, 16, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Sample
+            {
+                CreatedAt = baseDate.AddDays(3).AddHours(11).AddMinutes(5),
+                ReceivedAt = baseDate.AddDays(3).AddHours(12).AddMinutes(0),
+                Folio = 20111,
+                ClientId = 101,
+                PatientId = 2011,
+                ExamId = 315,
+                ExamName = "Hemoglobina Glicada",
+                ProcessedAt = null,
+                ValidatedAt = null,
+                Location = "Monterrey",
+                Outsourcer = "Quest Labs",
+                Priority = "Normal",
+                BirthDate = new DateTime(1975, 10, 21, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Sample
+            {
+                CreatedAt = baseDate.AddDays(3).AddHours(14).AddMinutes(40),
+                ReceivedAt = baseDate.AddDays(3).AddHours(15).AddMinutes(30),
+                Folio = 20112,
+                ClientId = 104,
+                PatientId = 2012,
+                ExamId = 316,
+                ExamName = "Ferritina",
+                ProcessedAt = null,
+                ValidatedAt = null,
+                Location = "Puebla",
+                Outsourcer = "Maq Y",
+                Priority = "Urgente",
+                BirthDate = new DateTime(1991, 7, 7, 0, 0, 0, DateTimeKind.Utc),
+            }
+        });
 
         context.Samples.AddRange(samples);
         await context.SaveChangesAsync();
 
-        var pending = samples.Count(s => s.FecLibera == null);
-        var completed = samples.Count(s => s.FecLibera != null);
+        var pending = samples.Count(s => s.ValidatedAt == null);
+        var completed = samples.Count(s => s.ValidatedAt != null);
 
         logger.LogInformation("Seeded {Total} samples: {Completed} completed, {Pending} pending",
             samples.Count, completed, pending);
