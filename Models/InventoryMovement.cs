@@ -38,6 +38,12 @@ public class InventoryMovement
     [Required]
     public DateTime MovementDate { get; set; }
 
+    [Column("consumption_record_id")]
+    public int? ConsumptionRecordId { get; set; }
+
+    [ForeignKey("ConsumptionRecordId")]
+    public ConsumptionRecord? ConsumptionRecord { get; set; }
+
     [Column("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

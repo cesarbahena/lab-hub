@@ -15,6 +15,7 @@ public static class DbSeeder
         {
             await SeedUsersAsync(context, logger);
             await SeedShiftsAsync(context, logger);
+            await SeedReagentsAsync(context, logger);
             await SeedInventoryItemsAsync(context, logger);
             await SeedSamplesFromCsvAsync(context, logger);
 
@@ -141,6 +142,87 @@ public static class DbSeeder
         await context.SaveChangesAsync();
 
         logger.LogInformation("Seeded {Count} shifts", shifts.Count);
+    }
+
+    private static async Task SeedReagentsAsync(QuimiosDbContext context, ILogger logger)
+    {
+        if (await context.Reagents.AnyAsync())
+        {
+            logger.LogInformation("Reagents already exist, skipping");
+            return;
+        }
+
+        logger.LogInformation("Seeding reagents with calibration values...");
+
+        var reagents = new List<Reagent>
+        {
+            new Reagent { Code = "ACVALPMT", Name = "AC. VALP", CalibrationConsumption = 12, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "AFP_MTY", Name = "AFP", CalibrationConsumption = 12, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "BHCGMTY", Name = "BETA-HCG", CalibrationConsumption = 12, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "CA125MTY", Name = "CA-125", CalibrationConsumption = 12, Category = "Tumor Markers", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "CA153MTY", Name = "CA-153", CalibrationConsumption = 12, Category = "Tumor Markers", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "CA199MTY", Name = "CA-199", CalibrationConsumption = 12, Category = "Tumor Markers", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "CEA2MTY", Name = "CEA2", CalibrationConsumption = 12, Category = "Tumor Markers", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "CORSMTY", Name = "CORTISOL-OR", CalibrationConsumption = 12, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "E2MTY", Name = "E2", CalibrationConsumption = 12, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "FERR_MTY", Name = "FERR", CalibrationConsumption = 12, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "FSHMTY", Name = "FSH", CalibrationConsumption = 6, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "INSULMTY", Name = "INSULINA", CalibrationConsumption = 12, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "LHMTY", Name = "LH", CalibrationConsumption = 12, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "PROGMTY", Name = "PROG", CalibrationConsumption = 4, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "PROLMTY", Name = "PROL", CalibrationConsumption = 4, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "PSALIBMT", Name = "PSA-LIBRE", CalibrationConsumption = 4, Category = "Tumor Markers", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "PSATOTMT", Name = "PSA-TOTAL", CalibrationConsumption = 4, Category = "Tumor Markers", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "TETOTMTY", Name = "TEST-TOTAL", CalibrationConsumption = 12, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "TSHMTY", Name = "TSH", CalibrationConsumption = 4, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "TUMTY", Name = "TU", CalibrationConsumption = 12, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "T3LIBMTY", Name = "T3-LIBRE", CalibrationConsumption = 12, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "T3TOTMTY", Name = "T3-TOTAL", CalibrationConsumption = 12, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "T4LIBMTY", Name = "T4-LIBRE", CalibrationConsumption = 12, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "T4TOTMTY", Name = "T4-TOTAL", CalibrationConsumption = 12, Category = "Hormones", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "ACURIMTY", Name = "AC. URICO-S", CalibrationConsumption = 6, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "ALBMTY", Name = "ALBUMINA-SUERO", CalibrationConsumption = 4, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "AMIMTY", Name = "AMILASA-S", CalibrationConsumption = 3, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "BILIDMTY", Name = "BILIRR-DIR", CalibrationConsumption = 6, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "BILITMTY", Name = "BILIRR-TOT", CalibrationConsumption = 6, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "CA-SMTY", Name = "Ca-S", CalibrationConsumption = 6, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "CLOMTY", Name = "CLORO-S", CalibrationConsumption = 6, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "COLHMTY", Name = "COLEST-HDL", CalibrationConsumption = 3, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "COLTMTY", Name = "COLEST-TOT", CalibrationConsumption = 6, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "CREAMTY", Name = "CREATININA-S", CalibrationConsumption = 3, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "C3_MTY", Name = "C3", CalibrationConsumption = 15, Category = "Immunology", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "C4_MTY", Name = "C4", CalibrationConsumption = 15, Category = "Immunology", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "DHLMTY", Name = "DHL", CalibrationConsumption = 0, Category = "Enzymes", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "FESMTY", Name = "FE SERICO", CalibrationConsumption = 3, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "FOSFAMTY", Name = "FOSF-ALCAL", CalibrationConsumption = 0, Category = "Enzymes", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "FOSFMTY", Name = "FOSFOR-S", CalibrationConsumption = 6, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "GGTPMTY", Name = "GGTP", CalibrationConsumption = 0, Category = "Enzymes", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "GLUMTY", Name = "GLUCOSA-S", CalibrationConsumption = 6, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "IgA_MTY", Name = "IgA", CalibrationConsumption = 18, Category = "Immunology", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "IgG_MTY", Name = "IgG", CalibrationConsumption = 15, Category = "Immunology", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "IgM_MTY", Name = "IgM", CalibrationConsumption = 15, Category = "Immunology", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "IgE_MTY", Name = "IgE", CalibrationConsumption = 10, Category = "Immunology", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "LIPASAMT", Name = "LIPASA", CalibrationConsumption = 3, Category = "Enzymes", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "MGSMTY", Name = "Mg-SERICO", CalibrationConsumption = 6, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "NITROMTY", Name = "NITROG URE", CalibrationConsumption = 6, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "PCRCUMTY", Name = "PCR-ULTRA", CalibrationConsumption = 12, Category = "Immunology", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "PCRULMTY", Name = "PCR-ULTRA", CalibrationConsumption = 12, Category = "Immunology", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "POTMTY", Name = "POTASIO-S", CalibrationConsumption = 6, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "PRTTSMTY", Name = "PROT-TOT-S", CalibrationConsumption = 6, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "SODMTY", Name = "SODIO-S", CalibrationConsumption = 6, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "TGOMTY", Name = "TGO", CalibrationConsumption = 0, Category = "Enzymes", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "TGPMTY", Name = "TGP", CalibrationConsumption = 0, Category = "Enzymes", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "TRF_MTY", Name = "TRF", CalibrationConsumption = 0, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "TRIGLMTY", Name = "TRIGLICERIDOS", CalibrationConsumption = 6, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "UIBCMTY", Name = "CAP. FIJ. Fe", CalibrationConsumption = 2, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "HBGLMTY", Name = "Hb-GLIC", CalibrationConsumption = 12, Category = "Chemistry", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Reagent { Code = "DIMEMTY", Name = "DIMERO D", CalibrationConsumption = 10, Category = "Coagulation", Unit = "Pruebas", IsActive = true, CreatedAt = DateTime.UtcNow }
+        };
+
+        context.Reagents.AddRange(reagents);
+        await context.SaveChangesAsync();
+
+        logger.LogInformation("Seeded {Count} reagents with calibration values", reagents.Count);
     }
 
     private static async Task SeedInventoryItemsAsync(QuimiosDbContext context, ILogger logger)

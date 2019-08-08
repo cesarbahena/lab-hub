@@ -16,6 +16,8 @@ public class QuimiosDbContext : DbContext
     public DbSet<PendingSample> PendingSamples { get; set; }
     public DbSet<InventoryItem> InventoryItems { get; set; }
     public DbSet<InventoryMovement> InventoryMovements { get; set; }
+    public DbSet<Reagent> Reagents { get; set; }
+    public DbSet<ConsumptionRecord> ConsumptionRecords { get; set; }
     public DbSet<CollectionRoute> CollectionRoutes { get; set; }
     public DbSet<RouteStop> RouteStops { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
@@ -36,6 +38,11 @@ public class QuimiosDbContext : DbContext
             .HasIndex(i => i.Code)
             .IsUnique();
 
+        // Configure Reagent unique code
+        modelBuilder.Entity<Reagent>()
+            .HasIndex(r => r.Code)
+            .IsUnique();
+
         // Configure User unique username
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Username)
@@ -54,6 +61,9 @@ public class QuimiosDbContext : DbContext
         modelBuilder.Entity<ShiftHandover>()
             .HasIndex(sh => sh.HandoverDate);
 
+        modelBuilder.Entity<ConsumptionRecord>()
+            .HasIndex(cr => cr.ConsumptionDate);
+
         // Configure decimal precision for inventory
         modelBuilder.Entity<InventoryItem>()
             .Property(i => i.CurrentStock)
@@ -69,6 +79,30 @@ public class QuimiosDbContext : DbContext
 
         modelBuilder.Entity<InventoryMovement>()
             .Property(i => i.Quantity)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<ConsumptionRecord>()
+            .Property(cr => cr.ResearchConsumption)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<ConsumptionRecord>()
+            .Property(cr => cr.RepeatConsumption)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<ConsumptionRecord>()
+            .Property(cr => cr.QCConsumption)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<ConsumptionRecord>()
+            .Property(cr => cr.ManualConsumption)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<ConsumptionRecord>()
+            .Property(cr => cr.CalibrationConsumption)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<ConsumptionRecord>()
+            .Property(cr => cr.TotalConsumption)
             .HasPrecision(18, 2);
 
         // Configure relationships with cascade delete
@@ -89,5 +123,23 @@ public class QuimiosDbContext : DbContext
             .WithOne(im => im.InventoryItem)
             .HasForeignKey(im => im.InventoryItemId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Reagent>()
+            .HasMany(r => r.ConsumptionRecords)
+            .WithOne(cr => cr.Reagent)
+            .HasForeignKey(cr => cr.ReagentId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Reagent>()
+            .HasMany(r => r.InventoryItems)
+            .WithOne(ii => ii.Reagent)
+            .HasForeignKey(ii => ii.ReagentId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<ConsumptionRecord>()
+            .HasMany(cr => cr.InventoryMovements)
+            .WithOne(im => im.ConsumptionRecord)
+            .HasForeignKey(im => im.ConsumptionRecordId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

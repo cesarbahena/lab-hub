@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuimiOSHub.Models;
 
-[Table("inventory_items")]
-public class InventoryItem
+[Table("reagents")]
+public class Reagent
 {
     [Key]
     [Column("id")]
@@ -20,9 +20,8 @@ public class InventoryItem
     [MaxLength(200)]
     public string Name { get; set; } = string.Empty;
 
-    [Column("description")]
-    [MaxLength(1000)]
-    public string? Description { get; set; }
+    [Column("calibration_consumption")]
+    public int CalibrationConsumption { get; set; }
 
     [Column("category")]
     [MaxLength(100)]
@@ -32,29 +31,12 @@ public class InventoryItem
     [MaxLength(50)]
     public string? Unit { get; set; }
 
-    [Column("current_stock")]
-    public decimal CurrentStock { get; set; }
-
-    [Column("min_stock")]
-    public decimal? MinStock { get; set; }
-
-    [Column("max_stock")]
-    public decimal? MaxStock { get; set; }
-
-    [Column("reagent_id")]
-    public int? ReagentId { get; set; }
-
-    [ForeignKey("ReagentId")]
-    public Reagent? Reagent { get; set; }
-
     [Column("is_active")]
     public bool IsActive { get; set; } = true;
 
     [Column("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public ICollection<InventoryMovement> InventoryMovements { get; set; } = new List<InventoryMovement>();
-
-    [NotMapped]
-    public bool IsLowStock => MinStock.HasValue && CurrentStock <= MinStock.Value;
+    public ICollection<ConsumptionRecord> ConsumptionRecords { get; set; } = new List<ConsumptionRecord>();
+    public ICollection<InventoryItem> InventoryItems { get; set; } = new List<InventoryItem>();
 }
