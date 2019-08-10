@@ -194,7 +194,9 @@ namespace QuimiOSHub.Controllers
         private async Task ProcessConsumptionAsync(List<GridConsumption> gridConsumptions, IFormCollection formData)
         {
             var dateStr = formData["ctl00$ContentMasterPage$txtDesdeB"].ToString();
-            var consumptionDate = DateTime.ParseExact(dateStr, "dd/MM/yyyy", null);
+            var consumptionDate = DateTime.SpecifyKind(
+                DateTime.ParseExact(dateStr, "dd/MM/yyyy", null),
+                DateTimeKind.Utc);
 
             foreach (var gridConsumption in gridConsumptions)
             {

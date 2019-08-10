@@ -233,7 +233,10 @@ public static class DbSeeder
             return;
         }
 
-        logger.LogInformation("Seeding inventory items from QuimiOSCompanion quimios-names.js...");
+        logger.LogInformation("Seeding inventory items and linking to reagents...");
+
+        // Load all reagents first to link inventory items
+        var reagents = await context.Reagents.ToDictionaryAsync(r => r.Code, r => r.Id);
 
         var items = new List<InventoryItem>
         {
@@ -305,10 +308,20 @@ public static class DbSeeder
             new InventoryItem { Code = "DIMEMTY", Name = "DIMERO D", Category = "Coagulation", Unit = "test", CurrentStock = 100, MinStock = 20, MaxStock = 200 }
         };
 
+        // Link inventory items to reagents by code
+        foreach (var item in items)
+        {
+            if (reagents.TryGetValue(item.Code, out var reagentId))
+            {
+                item.ReagentId = reagentId;
+            }
+        }
+
         context.InventoryItems.AddRange(items);
         await context.SaveChangesAsync();
 
-        logger.LogInformation("Seeded {Count} inventory items from QuimiOSCompanion", items.Count);
+        var linked = items.Count(i => i.ReagentId != null);
+        logger.LogInformation("Seeded {Count} inventory items ({Linked} linked to reagents)", items.Count, linked);
     }
 
     private static async Task SeedSamplesFromCsvAsync(QuimiosDbContext context, ILogger logger)
