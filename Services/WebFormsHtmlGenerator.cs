@@ -72,11 +72,18 @@ namespace QuimiOSHub.Services
             sb.AppendLine("                <tr>");
             sb.AppendLine("                    <th scope='col'>Código</th>");
             sb.AppendLine("                    <th scope='col'>Producto</th>");
+            sb.AppendLine("                    <th scope='col'>ID Producto</th>");
             sb.AppendLine("                    <th scope='col'>Existencia Final</th>");
             sb.AppendLine("                    <th scope='col'>Pacientes</th>");
             sb.AppendLine("                    <th scope='col'>Repeticiones</th>");
             sb.AppendLine("                    <th scope='col'>Control</th>");
             sb.AppendLine("                    <th scope='col'>Calibración</th>");
+            sb.AppendLine("                    <th scope='col'>Cancelación</th>");
+            sb.AppendLine("                    <th scope='col'>Motivo Cancel</th>");
+            sb.AppendLine("                    <th scope='col'>Proveedor</th>");
+            sb.AppendLine("                    <th scope='col'>Validación</th>");
+            sb.AppendLine("                    <th scope='col'>Sin Identificar</th>");
+            sb.AppendLine("                    <th scope='col'>Motivo Sin ID</th>");
             sb.AppendLine("                </tr>");
         }
 
@@ -96,14 +103,25 @@ namespace QuimiOSHub.Services
                 // Product name
                 sb.AppendLine($"                    <td>{item.Reagent.Name}</td>");
 
+                // Product ID (visible)
+                sb.AppendLine($"                    <td>{item.ReagentId}</td>");
+
                 // Current stock (ExistFinal)
                 sb.AppendLine($"                    <td><span id='ctl00_ContentMasterPage_grdConsumo_ctl{rowNum}_lblExistFinal'>{item.CurrentStock}</span></td>");
 
-                // Input fields (empty for GET, will be filled on POST)
+                // Main consumption input fields
                 sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$txtPacientes' type='text' value='0' /></td>");
                 sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$txtRepeticiones' type='text' value='0' /></td>");
                 sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$txtControlCapMGrd' type='text' value='0' /></td>");
                 sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$txtCalibracionCapMGrd' type='text' value='0' /></td>");
+                sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$txtCancelacionCapMGrd' type='text' value='0' /></td>");
+                sb.AppendLine($"                    <td><select name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$cmbMotCancelacionGrd'><option value='[Seleccione]'>[Seleccione]</option></select></td>");
+
+                // Metadata fields (visible columns)
+                sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$chkQueProveedor' type='checkbox' checked='checked' /></td>");
+                sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$txtValidacionCapMGrd' type='text' value='0' /></td>");
+                sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$txtSinIdentificarCapMGrd' type='text' value='0' /></td>");
+                sb.AppendLine($"                    <td><select name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$cmbMotSinIdentificarGrd'><option value='[Seleccione]'>[Seleccione]</option></select></td>");
 
                 // Hidden product ID
                 sb.AppendLine($"                    <input type='hidden' name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$hfIDProducto' id='ctl00_ContentMasterPage_grdConsumo_ctl{rowNum}_hfIDProducto' value='{item.ReagentId}' />");
