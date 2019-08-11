@@ -18,6 +18,8 @@ public static class DbSeeder
             await SeedReagentsAsync(context, logger);
             await SeedInventoryItemsAsync(context, logger);
             await SeedSamplesFromCsvAsync(context, logger);
+            await SeedInventoryMovementsAsync(context, logger);
+            await SeedConsumptionRecordsAsync(context, logger);
 
             logger.LogInformation("Database seeding completed successfully");
         }
@@ -579,5 +581,161 @@ public static class DbSeeder
 
         logger.LogInformation("Seeded {Total} samples: {Completed} completed, {Pending} pending",
             samples.Count, completed, pending);
+    }
+
+    private static async Task SeedInventoryMovementsAsync(QuimiosDbContext context, ILogger logger)
+    {
+        if (await context.InventoryMovements.AnyAsync())
+        {
+            logger.LogInformation("Inventory movements already exist, skipping");
+            return;
+        }
+
+        logger.LogInformation("Seeding inventory movements...");
+
+        var inventoryItems = await context.InventoryItems
+            .Include(i => i.Reagent)
+            .Where(i => i.Reagent != null)
+            .ToListAsync();
+
+        var movements = new List<InventoryMovement>();
+        var random = new Random(42); // Fixed seed for reproducibility
+
+        // Create initial stock IN movements (2-3 weeks ago)
+        foreach (var item in inventoryItems)
+        {
+            var initialReceiptDate = DateTime.UtcNow.AddDays(-random.Next(14, 21));
+            movements.Add(new InventoryMovement
+            {
+                InventoryItemId = item.Id,
+                MovementType = "IN",
+                Quantity = item.CurrentStock + random.Next(50, 200), // More than current to account for consumption
+                Reference = $"Initial Stock Receipt",
+                Notes = "Opening inventory balance",
+                MovementDate = initialReceiptDate,
+                CreatedAt = initialReceiptDate
+            });
+        }
+
+        // Create some restocking movements (1 week ago)
+        var restockItems = inventoryItems.Take(15).ToList();
+        foreach (var item in restockItems)
+        {
+            var restockDate = DateTime.UtcNow.AddDays(-7);
+            movements.Add(new InventoryMovement
+            {
+                InventoryItemId = item.Id,
+                MovementType = "IN",
+                Quantity = random.Next(100, 300),
+                Reference = $"Restock Order #{random.Next(1000, 9999)}",
+                Notes = "Regular inventory replenishment",
+                MovementDate = restockDate,
+                CreatedAt = restockDate
+            });
+        }
+
+        context.InventoryMovements.AddRange(movements);
+        await context.SaveChangesAsync();
+
+        logger.LogInformation("Seeded {Count} inventory movements ({In} IN, {Out} OUT)",
+            movements.Count,
+            movements.Count(m => m.MovementType == "IN"),
+            movements.Count(m => m.MovementType == "OUT"));
+    }
+
+    private static async Task SeedConsumptionRecordsAsync(QuimiosDbContext context, ILogger logger)
+    {
+        if (await context.ConsumptionRecords.AnyAsync())
+        {
+            logger.LogInformation("Consumption records already exist, skipping");
+            return;
+        }
+
+        logger.LogInformation("Seeding consumption records...");
+
+        var reagents = await context.Reagents.Where(r => r.IsActive).ToListAsync();
+        var inventoryItems = await context.InventoryItems
+            .Include(i => i.Reagent)
+            .Where(i => i.Reagent != null)
+            .ToListAsync();
+
+        var consumptionRecords = new List<ConsumptionRecord>();
+        var movements = new List<InventoryMovement>();
+        var random = new Random(42);
+
+        // Create consumption for last 7 days
+        for (int daysAgo = 7; daysAgo >= 1; daysAgo--)
+        {
+            var consumptionDate = DateTime.UtcNow.AddDays(-daysAgo).Date;
+
+            // Select 10-20 random reagents per day
+            var dailyReagents = reagents.OrderBy(x => random.Next()).Take(random.Next(10, 20)).ToList();
+
+            foreach (var reagent in dailyReagents)
+            {
+                var inventoryItem = inventoryItems.FirstOrDefault(i => i.ReagentId == reagent.Id);
+                if (inventoryItem == null) continue;
+
+                var patients = random.Next(0, 50);
+                var repeats = random.Next(0, 10);
+                var qc = random.Next(0, 15);
+                var calibration = random.Next(0, 2) == 1 ? reagent.CalibrationConsumption : 0;
+                var cancellation = random.Next(0, 5);
+                var validation = random.Next(0, 8);
+                var unidentified = random.Next(0, 3);
+
+                var total = patients + repeats + qc + calibration + cancellation + validation + unidentified;
+
+                if (total == 0) continue;
+
+                var record = new ConsumptionRecord
+                {
+                    ReagentId = reagent.Id,
+                    ConsumptionDate = DateTime.SpecifyKind(consumptionDate, DateTimeKind.Utc),
+                    ResearchConsumption = patients,
+                    RepeatConsumption = repeats,
+                    QCConsumption = qc,
+                    CalibrationConsumption = calibration,
+                    CancellationConsumption = cancellation,
+                    ValidationConsumption = validation,
+                    UnidentifiedConsumption = unidentified,
+                    ManualConsumption = 0,
+                    TotalConsumption = total,
+                    CreatedAt = DateTime.SpecifyKind(consumptionDate.AddHours(18), DateTimeKind.Utc) // End of day
+                };
+
+                consumptionRecords.Add(record);
+            }
+        }
+
+        context.ConsumptionRecords.AddRange(consumptionRecords);
+        await context.SaveChangesAsync();
+
+        // Create corresponding inventory movements for each consumption
+        foreach (var record in consumptionRecords)
+        {
+            var inventoryItem = inventoryItems.FirstOrDefault(i => i.ReagentId == record.ReagentId);
+            if (inventoryItem == null) continue;
+
+            var movement = new InventoryMovement
+            {
+                InventoryItemId = inventoryItem.Id,
+                MovementType = "OUT",
+                Quantity = record.TotalConsumption,
+                Reference = $"Daily Consumption {record.ConsumptionDate:yyyy-MM-dd}",
+                Notes = $"Px:{record.ResearchConsumption} Rep:{record.RepeatConsumption} QC:{record.QCConsumption} Cal:{record.CalibrationConsumption} Canc:{record.CancellationConsumption} Val:{record.ValidationConsumption} Unid:{record.UnidentifiedConsumption}",
+                MovementDate = record.ConsumptionDate,
+                ConsumptionRecordId = record.Id,
+                CreatedAt = record.CreatedAt
+            };
+
+            movements.Add(movement);
+        }
+
+        context.InventoryMovements.AddRange(movements);
+        await context.SaveChangesAsync();
+
+        logger.LogInformation("Seeded {Count} consumption records spanning {Days} days with {Movements} movements",
+            consumptionRecords.Count, 7, movements.Count);
     }
 }
