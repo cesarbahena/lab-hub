@@ -152,6 +152,11 @@ namespace QuimiOSHub.Controllers
                 var rowNumber = match.Groups[1].Value;
                 var prefix = $"ctl00$ContentMasterPage$grdConsumo$ctl{rowNumber}";
 
+                // Only process rows where checkbox is checked (present in POST data)
+                // Unchecked checkboxes don't post, so absence means row not selected
+                if (!formData.ContainsKey($"{prefix}$chkQueProveedor"))
+                    continue;
+
                 var consumption = new GridConsumption
                 {
                     RowNumber = rowNumber,
@@ -182,6 +187,17 @@ namespace QuimiOSHub.Controllers
                 if (formData.ContainsKey($"{prefix}$cmbMotCancelacionGrd"))
                     consumption.CancellationReason = formData[$"{prefix}$cmbMotCancelacionGrd"].ToString();
 
+                if (formData.ContainsKey($"{prefix}$txtValidacionCapMGrd") &&
+                    int.TryParse(formData[$"{prefix}$txtValidacionCapMGrd"], out int val))
+                    consumption.Validation = val;
+
+                if (formData.ContainsKey($"{prefix}$txtSinIdentificarCapMGrd") &&
+                    int.TryParse(formData[$"{prefix}$txtSinIdentificarCapMGrd"], out int unid))
+                    consumption.Unidentified = unid;
+
+                if (formData.ContainsKey($"{prefix}$cmbMotSinIdentificarGrd"))
+                    consumption.UnidentifiedReason = formData[$"{prefix}$cmbMotSinIdentificarGrd"].ToString();
+
                 consumptions.Add(consumption);
             }
 
@@ -209,7 +225,9 @@ namespace QuimiOSHub.Controllers
 
                 // Calculate total consumption
                 var totalConsumption = gridConsumption.Patients + gridConsumption.Repeats +
-                                     gridConsumption.QC + gridConsumption.Calibrations;
+                                     gridConsumption.QC + gridConsumption.Calibrations +
+                                     gridConsumption.Cancellations + gridConsumption.Validation +
+                                     gridConsumption.Unidentified;
 
                 if (totalConsumption == 0)
                     continue;
@@ -228,6 +246,9 @@ namespace QuimiOSHub.Controllers
                     QCConsumption = gridConsumption.QC,
                     ManualConsumption = 0,
                     CalibrationConsumption = gridConsumption.Calibrations,
+                    CancellationConsumption = gridConsumption.Cancellations,
+                    ValidationConsumption = gridConsumption.Validation,
+                    UnidentifiedConsumption = gridConsumption.Unidentified,
                     TotalConsumption = totalConsumption
                 };
 
@@ -241,7 +262,7 @@ namespace QuimiOSHub.Controllers
                     MovementType = "OUT",
                     Quantity = totalConsumption,
                     Reference = $"Consumption {consumptionDate:yyyy-MM-dd}",
-                    Notes = $"Px:{gridConsumption.Patients} Rep:{gridConsumption.Repeats} QC:{gridConsumption.QC} Cal:{gridConsumption.Calibrations}",
+                    Notes = $"Px:{gridConsumption.Patients} Rep:{gridConsumption.Repeats} QC:{gridConsumption.QC} Cal:{gridConsumption.Calibrations} Canc:{gridConsumption.Cancellations} Val:{gridConsumption.Validation} Unid:{gridConsumption.Unidentified}",
                     MovementDate = consumptionDate,
                     ConsumptionRecordId = consumptionRecord.Id
                 };
@@ -265,6 +286,9 @@ namespace QuimiOSHub.Controllers
             public int Calibrations { get; set; }
             public int Cancellations { get; set; }
             public string CancellationReason { get; set; } = "[Seleccione]";
+            public int Validation { get; set; }
+            public int Unidentified { get; set; }
+            public string UnidentifiedReason { get; set; } = "[Seleccione]";
         }
     }
 }

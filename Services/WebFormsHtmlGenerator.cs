@@ -70,20 +70,22 @@ namespace QuimiOSHub.Services
         private void AppendGridHeader(StringBuilder sb)
         {
             sb.AppendLine("                <tr>");
+            sb.AppendLine("                    <th scope='col'><input name='ctl00$ContentMasterPage$grdConsumo$ctl01$chkProvAll' type='checkbox' checked='checked' /></th>");
+            sb.AppendLine("                    <th scope='col'>ID Producto</th>");
             sb.AppendLine("                    <th scope='col'>Código</th>");
             sb.AppendLine("                    <th scope='col'>Producto</th>");
-            sb.AppendLine("                    <th scope='col'>ID Producto</th>");
-            sb.AppendLine("                    <th scope='col'>Existencia Final</th>");
             sb.AppendLine("                    <th scope='col'>Pacientes</th>");
             sb.AppendLine("                    <th scope='col'>Repeticiones</th>");
             sb.AppendLine("                    <th scope='col'>Control</th>");
             sb.AppendLine("                    <th scope='col'>Calibración</th>");
             sb.AppendLine("                    <th scope='col'>Cancelación</th>");
             sb.AppendLine("                    <th scope='col'>Motivo Cancel</th>");
-            sb.AppendLine("                    <th scope='col'>Proveedor</th>");
             sb.AppendLine("                    <th scope='col'>Validación</th>");
             sb.AppendLine("                    <th scope='col'>Sin Identificar</th>");
             sb.AppendLine("                    <th scope='col'>Motivo Sin ID</th>");
+            sb.AppendLine("                    <th scope='col'>Existencia Inicial</th>");
+            sb.AppendLine("                    <th scope='col'>Existencia Final</th>");
+            sb.AppendLine("                    <th scope='col'>Usuario</th>");
             sb.AppendLine("                </tr>");
         }
 
@@ -97,31 +99,33 @@ namespace QuimiOSHub.Services
 
                 sb.AppendLine($"                <tr class='gridrow'>");
 
+                // Row selection checkbox (first column)
+                sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$chkQueProveedor' type='checkbox' checked='checked' /></td>");
+
+                // Product ID (second column, visible)
+                sb.AppendLine($"                    <td>{item.ReagentId}</td>");
+
                 // Reagent code with proper ID pattern for parsing
                 sb.AppendLine($"                    <td><span class='wd090' id='ctl00_ContentMasterPage_grdConsumo_ctl{rowNum}_lblCodProducto'>{item.Reagent!.Code}</span></td>");
 
                 // Product name
                 sb.AppendLine($"                    <td>{item.Reagent.Name}</td>");
 
-                // Product ID (visible)
-                sb.AppendLine($"                    <td>{item.ReagentId}</td>");
-
-                // Current stock (ExistFinal)
-                sb.AppendLine($"                    <td><span id='ctl00_ContentMasterPage_grdConsumo_ctl{rowNum}_lblExistFinal'>{item.CurrentStock}</span></td>");
-
-                // Main consumption input fields
+                // Consumption input fields
                 sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$txtPacientes' type='text' value='0' /></td>");
                 sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$txtRepeticiones' type='text' value='0' /></td>");
                 sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$txtControlCapMGrd' type='text' value='0' /></td>");
                 sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$txtCalibracionCapMGrd' type='text' value='0' /></td>");
                 sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$txtCancelacionCapMGrd' type='text' value='0' /></td>");
                 sb.AppendLine($"                    <td><select name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$cmbMotCancelacionGrd'><option value='[Seleccione]'>[Seleccione]</option></select></td>");
-
-                // Metadata fields (visible columns)
-                sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$chkQueProveedor' type='checkbox' checked='checked' /></td>");
                 sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$txtValidacionCapMGrd' type='text' value='0' /></td>");
                 sb.AppendLine($"                    <td><input name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$txtSinIdentificarCapMGrd' type='text' value='0' /></td>");
                 sb.AppendLine($"                    <td><select name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$cmbMotSinIdentificarGrd'><option value='[Seleccione]'>[Seleccione]</option></select></td>");
+
+                // Stock tracking (last 3 columns)
+                sb.AppendLine($"                    <td><span id='ctl00_ContentMasterPage_grdConsumo_ctl{rowNum}_lblExistInicial'>{item.CurrentStock}</span></td>");
+                sb.AppendLine($"                    <td><span id='ctl00_ContentMasterPage_grdConsumo_ctl{rowNum}_lblExistFinal'>{item.CurrentStock}</span></td>");
+                sb.AppendLine($"                    <td><span id='ctl00_ContentMasterPage_grdConsumo_ctl{rowNum}_lblUsuario'>admin</span></td>");
 
                 // Hidden product ID
                 sb.AppendLine($"                    <input type='hidden' name='ctl00$ContentMasterPage$grdConsumo$ctl{rowNum}$hfIDProducto' id='ctl00_ContentMasterPage_grdConsumo_ctl{rowNum}_hfIDProducto' value='{item.ReagentId}' />");

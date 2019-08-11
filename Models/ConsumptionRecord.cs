@@ -36,6 +36,15 @@ public class ConsumptionRecord
     [Column("calibration_consumption")]
     public decimal CalibrationConsumption { get; set; }
 
+    [Column("cancellation_consumption")]
+    public decimal CancellationConsumption { get; set; }
+
+    [Column("validation_consumption")]
+    public decimal ValidationConsumption { get; set; }
+
+    [Column("unidentified_consumption")]
+    public decimal UnidentifiedConsumption { get; set; }
+
     [Column("total_consumption")]
     public decimal TotalConsumption { get; set; }
 
