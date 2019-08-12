@@ -1,13 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace QuimiOSHub.Data;
+namespace LIMSApi.Data;
 
 public static class DatabaseExtensions
 {
-    public static void EnsureIndexes(this QuimiosDbContext context)
+    public static void EnsureIndexes(this LIMSDbContext context)
     {
         // This method documents the indexes created via OnModelCreating
-        // Indexes are defined in QuimiosDbContext.OnModelCreating() using Fluent API
+        // Indexes are defined in LIMSDbContext.OnModelCreating() using Fluent API
 
         // Sample indexes:
         // - folio_grd, cliente_grd, fecha_recep (composite unique)
@@ -25,7 +25,7 @@ public static class DatabaseExtensions
         // - is_active (for active user queries)
     }
 
-    public static async Task<bool> CanConnectAsync(this QuimiosDbContext context)
+    public static async Task<bool> CanConnectAsync(this LIMSDbContext context)
     {
         try
         {
@@ -37,7 +37,7 @@ public static class DatabaseExtensions
         }
     }
 
-    public static async Task<DatabaseHealthStatus> GetHealthStatusAsync(this QuimiosDbContext context)
+    public static async Task<DatabaseHealthStatus> GetHealthStatusAsync(this LIMSDbContext context)
     {
         var status = new DatabaseHealthStatus();
 
@@ -47,10 +47,10 @@ public static class DatabaseExtensions
 
             if (status.CanConnect)
             {
-                status.SampleCount = await context.Samples.CountAsync();
+                status.ExamCount = await context.Exams.CountAsync();
                 status.UserCount = await context.Users.CountAsync();
                 status.InventoryItemCount = await context.InventoryItems.CountAsync();
-                status.PendingSampleCount = await context.Samples.CountAsync(s => s.ValidatedAt == null);
+                status.PendingExamCount = await context.Exams.CountAsync(s => s.ValidatedAt == null);
                 status.IsHealthy = true;
             }
         }
@@ -68,9 +68,9 @@ public class DatabaseHealthStatus
 {
     public bool IsHealthy { get; set; }
     public bool CanConnect { get; set; }
-    public int SampleCount { get; set; }
+    public int ExamCount { get; set; }
     public int UserCount { get; set; }
     public int InventoryItemCount { get; set; }
-    public int PendingSampleCount { get; set; }
+    public int PendingExamCount { get; set; }
     public string? ErrorMessage { get; set; }
 }

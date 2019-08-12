@@ -1,20 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QuimiOSHub.Data;
-using QuimiOSHub.DTOs;
-using QuimiOSHub.Models;
-using QuimiOSHub.Services;
+using LIMSApi.Data;
+using LIMSApi.DTOs;
+using LIMSApi.Models;
+using LIMSApi.Services;
 
-namespace QuimiOSHub.Controllers;
+namespace LIMSApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class InventoryItemsController : ControllerBase
 {
-    private readonly QuimiosDbContext _context;
+    private readonly LIMSDbContext _context;
     private readonly IInventoryService _inventoryService;
 
-    public InventoryItemsController(QuimiosDbContext context, IInventoryService inventoryService)
+    public InventoryItemsController(LIMSDbContext context, IInventoryService inventoryService)
     {
         _context = context;
         _inventoryService = inventoryService;

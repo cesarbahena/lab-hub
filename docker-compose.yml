@@ -1,18 +1,18 @@
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: quimios-dev-db
+    container_name: lims-dev-db
     environment:
-      POSTGRES_USER: quimios_dev
+      POSTGRES_USER: lims_dev
       POSTGRES_PASSWORD: dev_password
-      POSTGRES_DB: quimios_dev
+      POSTGRES_DB: lims_dev
     ports:
       - "5433:5432"
     volumes:
-      - quimios_dev_data:/var/lib/postgresql/data
+      - lims_dev_data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U quimios_dev"]
+      test: ["CMD-SHELL", "pg_isready -U lims_dev"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -24,7 +24,7 @@ services:
     container_name: quimios-dev-app
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=quimios_dev;Username=quimios_dev;Password=dev_password"
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=lims_dev;Username=lims_dev;Password=dev_password"
     ports:
       - "8080:8080"
     depends_on:
@@ -33,4 +33,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  quimios_dev_data:
+  lims_dev_data:

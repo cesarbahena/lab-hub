@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using QuimiOSHub.Models;
-using QuimiOSHub.Services;
+using LIMSApi.Models;
+using LIMSApi.Services;
 
-namespace QuimiOSHub.Controllers;
+namespace LIMSApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

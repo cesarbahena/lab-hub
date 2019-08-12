@@ -1,6 +1,6 @@
-namespace QuimiOSHub.DTOs;
+namespace LIMSApi.DTOs;
 
-public class CreateSampleDto
+public class CreateExamDto
 {
     public DateTime? CreatedAt { get; set; }
     public DateTime? ReceivedAt { get; set; }

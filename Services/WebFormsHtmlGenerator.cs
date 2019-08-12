@@ -1,7 +1,7 @@
 using System.Text;
-using QuimiOSHub.Models;
+using LIMSApi.Models;
 
-namespace QuimiOSHub.Services
+namespace LIMSApi.Services
 {
     /// <summary>
     /// Generates realistic ASP.NET WebForms HTML markup for mock QuimiOS endpoints.

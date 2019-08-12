@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace QuimiOSHub.Migrations
+namespace LIMSApi.Migrations
 {
     public partial class InitialCreate : Migration
     {

@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using QuimiOSHub.Data;
+using LIMSApi.Data;
 
 #nullable disable
 
-namespace QuimiOSHub.Migrations
+namespace LIMSApi.Migrations
 {
-    [DbContext(typeof(QuimiosDbContext))]
-    partial class QuimiosDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(LIMSDbContext))]
+    partial class LIMSDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -22,7 +22,7 @@ namespace QuimiOSHub.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("QuimiOSHub.Models.CheckIn", b =>
+            modelBuilder.Entity("LIMSApi.Models.CheckIn", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -73,7 +73,7 @@ namespace QuimiOSHub.Migrations
                     b.ToTable("check_ins");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.CollectionRoute", b =>
+            modelBuilder.Entity("LIMSApi.Models.CollectionRoute", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -106,7 +106,7 @@ namespace QuimiOSHub.Migrations
                     b.ToTable("collection_routes");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.ConsumptionRecord", b =>
+            modelBuilder.Entity("LIMSApi.Models.ConsumptionRecord", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -178,7 +178,7 @@ namespace QuimiOSHub.Migrations
                     b.ToTable("consumption_records");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.InventoryItem", b =>
+            modelBuilder.Entity("LIMSApi.Models.InventoryItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -253,7 +253,7 @@ namespace QuimiOSHub.Migrations
                     b.ToTable("inventory_items");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.InventoryMovement", b =>
+            modelBuilder.Entity("LIMSApi.Models.InventoryMovement", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -308,7 +308,7 @@ namespace QuimiOSHub.Migrations
                     b.ToTable("inventory_movements");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.PendingSample", b =>
+            modelBuilder.Entity("LIMSApi.Models.PendingSample", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -343,7 +343,7 @@ namespace QuimiOSHub.Migrations
                     b.ToTable("pending_samples");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.Reagent", b =>
+            modelBuilder.Entity("LIMSApi.Models.Reagent", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -394,7 +394,7 @@ namespace QuimiOSHub.Migrations
                     b.ToTable("reagents");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.RouteStop", b =>
+            modelBuilder.Entity("LIMSApi.Models.RouteStop", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -460,7 +460,7 @@ namespace QuimiOSHub.Migrations
                     b.ToTable("route_stops");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.Sample", b =>
+            modelBuilder.Entity("LIMSApi.Models.Sample", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -538,7 +538,7 @@ namespace QuimiOSHub.Migrations
                     b.ToTable("samples");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.Schedule", b =>
+            modelBuilder.Entity("LIMSApi.Models.Schedule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -591,7 +591,7 @@ namespace QuimiOSHub.Migrations
                     b.ToTable("schedules");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.Shift", b =>
+            modelBuilder.Entity("LIMSApi.Models.Shift", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -627,7 +627,7 @@ namespace QuimiOSHub.Migrations
                     b.ToTable("shifts");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.ShiftHandover", b =>
+            modelBuilder.Entity("LIMSApi.Models.ShiftHandover", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -672,7 +672,7 @@ namespace QuimiOSHub.Migrations
                     b.ToTable("shift_handovers");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.User", b =>
+            modelBuilder.Entity("LIMSApi.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -724,15 +724,15 @@ namespace QuimiOSHub.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.CheckIn", b =>
+            modelBuilder.Entity("LIMSApi.Models.CheckIn", b =>
                 {
-                    b.HasOne("QuimiOSHub.Models.RouteStop", "RouteStop")
+                    b.HasOne("LIMSApi.Models.RouteStop", "RouteStop")
                         .WithMany("CheckIns")
                         .HasForeignKey("RouteStopId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("QuimiOSHub.Models.User", "User")
+                    b.HasOne("LIMSApi.Models.User", "User")
                         .WithMany("CheckIns")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -743,9 +743,9 @@ namespace QuimiOSHub.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.ConsumptionRecord", b =>
+            modelBuilder.Entity("LIMSApi.Models.ConsumptionRecord", b =>
                 {
-                    b.HasOne("QuimiOSHub.Models.Reagent", "Reagent")
+                    b.HasOne("LIMSApi.Models.Reagent", "Reagent")
                         .WithMany("ConsumptionRecords")
                         .HasForeignKey("ReagentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -754,9 +754,9 @@ namespace QuimiOSHub.Migrations
                     b.Navigation("Reagent");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.InventoryItem", b =>
+            modelBuilder.Entity("LIMSApi.Models.InventoryItem", b =>
                 {
-                    b.HasOne("QuimiOSHub.Models.Reagent", "Reagent")
+                    b.HasOne("LIMSApi.Models.Reagent", "Reagent")
                         .WithMany("InventoryItems")
                         .HasForeignKey("ReagentId")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -764,14 +764,14 @@ namespace QuimiOSHub.Migrations
                     b.Navigation("Reagent");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.InventoryMovement", b =>
+            modelBuilder.Entity("LIMSApi.Models.InventoryMovement", b =>
                 {
-                    b.HasOne("QuimiOSHub.Models.ConsumptionRecord", "ConsumptionRecord")
+                    b.HasOne("LIMSApi.Models.ConsumptionRecord", "ConsumptionRecord")
                         .WithMany("InventoryMovements")
                         .HasForeignKey("ConsumptionRecordId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("QuimiOSHub.Models.InventoryItem", "InventoryItem")
+                    b.HasOne("LIMSApi.Models.InventoryItem", "InventoryItem")
                         .WithMany("InventoryMovements")
                         .HasForeignKey("InventoryItemId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -782,15 +782,15 @@ namespace QuimiOSHub.Migrations
                     b.Navigation("InventoryItem");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.PendingSample", b =>
+            modelBuilder.Entity("LIMSApi.Models.PendingSample", b =>
                 {
-                    b.HasOne("QuimiOSHub.Models.Sample", "Sample")
+                    b.HasOne("LIMSApi.Models.Sample", "Sample")
                         .WithMany()
                         .HasForeignKey("SampleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("QuimiOSHub.Models.ShiftHandover", "ShiftHandover")
+                    b.HasOne("LIMSApi.Models.ShiftHandover", "ShiftHandover")
                         .WithMany("PendingSamples")
                         .HasForeignKey("ShiftHandoverId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -801,9 +801,9 @@ namespace QuimiOSHub.Migrations
                     b.Navigation("ShiftHandover");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.RouteStop", b =>
+            modelBuilder.Entity("LIMSApi.Models.RouteStop", b =>
                 {
-                    b.HasOne("QuimiOSHub.Models.CollectionRoute", "CollectionRoute")
+                    b.HasOne("LIMSApi.Models.CollectionRoute", "CollectionRoute")
                         .WithMany("RouteStops")
                         .HasForeignKey("CollectionRouteId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -812,15 +812,15 @@ namespace QuimiOSHub.Migrations
                     b.Navigation("CollectionRoute");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.Schedule", b =>
+            modelBuilder.Entity("LIMSApi.Models.Schedule", b =>
                 {
-                    b.HasOne("QuimiOSHub.Models.CollectionRoute", "CollectionRoute")
+                    b.HasOne("LIMSApi.Models.CollectionRoute", "CollectionRoute")
                         .WithMany("Schedules")
                         .HasForeignKey("CollectionRouteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("QuimiOSHub.Models.User", "User")
+                    b.HasOne("LIMSApi.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -831,15 +831,15 @@ namespace QuimiOSHub.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.ShiftHandover", b =>
+            modelBuilder.Entity("LIMSApi.Models.ShiftHandover", b =>
                 {
-                    b.HasOne("QuimiOSHub.Models.Shift", "Shift")
+                    b.HasOne("LIMSApi.Models.Shift", "Shift")
                         .WithMany("ShiftHandovers")
                         .HasForeignKey("ShiftId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("QuimiOSHub.Models.User", "User")
+                    b.HasOne("LIMSApi.Models.User", "User")
                         .WithMany("ShiftHandovers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -850,46 +850,46 @@ namespace QuimiOSHub.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.CollectionRoute", b =>
+            modelBuilder.Entity("LIMSApi.Models.CollectionRoute", b =>
                 {
                     b.Navigation("RouteStops");
 
                     b.Navigation("Schedules");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.ConsumptionRecord", b =>
+            modelBuilder.Entity("LIMSApi.Models.ConsumptionRecord", b =>
                 {
                     b.Navigation("InventoryMovements");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.InventoryItem", b =>
+            modelBuilder.Entity("LIMSApi.Models.InventoryItem", b =>
                 {
                     b.Navigation("InventoryMovements");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.Reagent", b =>
+            modelBuilder.Entity("LIMSApi.Models.Reagent", b =>
                 {
                     b.Navigation("ConsumptionRecords");
 
                     b.Navigation("InventoryItems");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.RouteStop", b =>
+            modelBuilder.Entity("LIMSApi.Models.RouteStop", b =>
                 {
                     b.Navigation("CheckIns");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.Shift", b =>
+            modelBuilder.Entity("LIMSApi.Models.Shift", b =>
                 {
                     b.Navigation("ShiftHandovers");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.ShiftHandover", b =>
+            modelBuilder.Entity("LIMSApi.Models.ShiftHandover", b =>
                 {
                     b.Navigation("PendingSamples");
                 });
 
-            modelBuilder.Entity("QuimiOSHub.Models.User", b =>
+            modelBuilder.Entity("LIMSApi.Models.User", b =>
                 {
                     b.Navigation("CheckIns");
 

@@ -1,4 +1,4 @@
-namespace QuimiOSHub.DTOs;
+namespace LIMSApi.DTOs;
 
 public class CreateConsumptionDto
 {

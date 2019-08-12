@@ -1,19 +1,19 @@
 using Microsoft.EntityFrameworkCore;
-using QuimiOSHub.Models;
+using LIMSApi.Models;
 
-namespace QuimiOSHub.Data;
+namespace LIMSApi.Data;
 
-public class QuimiosDbContext : DbContext
+public class LIMSDbContext : DbContext
 {
-    public QuimiosDbContext(DbContextOptions<QuimiosDbContext> options) : base(options)
+    public LIMSDbContext(DbContextOptions<LIMSDbContext> options) : base(options)
     {
     }
 
-    public DbSet<Sample> Samples { get; set; }
+    public DbSet<Exam> Exams { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Shift> Shifts { get; set; }
     public DbSet<ShiftHandover> ShiftHandovers { get; set; }
-    public DbSet<PendingSample> PendingSamples { get; set; }
+    public DbSet<PendingExam> PendingExams { get; set; }
     public DbSet<InventoryItem> InventoryItems { get; set; }
     public DbSet<InventoryMovement> InventoryMovements { get; set; }
     public DbSet<Reagent> Reagents { get; set; }
@@ -27,11 +27,11 @@ public class QuimiosDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Configure Sample unique constraint (matching ETL)
-        modelBuilder.Entity<Sample>()
-            .HasIndex(s => new { s.Folio, s.ClientId, s.ReceivedAt })
+        // Configure Exam unique constraint (matching ETL)
+        modelBuilder.Entity<Exam>()
+            .HasIndex(e => new { e.Folio, e.ClientId, e.ReceivedAt })
             .IsUnique()
-            .HasDatabaseName("sample_unique_constraint");
+            .HasDatabaseName("exam_unique_constraint");
 
         // Configure InventoryItem unique code
         modelBuilder.Entity<InventoryItem>()
@@ -49,11 +49,11 @@ public class QuimiosDbContext : DbContext
             .IsUnique();
 
         // Add performance indexes
-        modelBuilder.Entity<Sample>()
-            .HasIndex(s => s.ReceivedAt);
+        modelBuilder.Entity<Exam>()
+            .HasIndex(e => e.ReceivedAt);
 
-        modelBuilder.Entity<Sample>()
-            .HasIndex(s => s.ClientId);
+        modelBuilder.Entity<Exam>()
+            .HasIndex(e => e.ClientId);
 
         modelBuilder.Entity<InventoryItem>()
             .HasIndex(i => i.Category);
@@ -107,9 +107,9 @@ public class QuimiosDbContext : DbContext
 
         // Configure relationships with cascade delete
         modelBuilder.Entity<ShiftHandover>()
-            .HasMany(sh => sh.PendingSamples)
-            .WithOne(ps => ps.ShiftHandover)
-            .HasForeignKey(ps => ps.ShiftHandoverId)
+            .HasMany(sh => sh.PendingExams)
+            .WithOne(pe => pe.ShiftHandover)
+            .HasForeignKey(pe => pe.ShiftHandoverId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<CollectionRoute>()

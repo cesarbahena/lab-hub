@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QuimiOSHub.Data;
+using LIMSApi.Data;
 
-namespace QuimiOSHub.Controllers;
+namespace LIMSApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class StatisticsController : ControllerBase
 {
-    private readonly QuimiosDbContext _context;
+    private readonly LIMSDbContext _context;
 
-    public StatisticsController(QuimiosDbContext context)
+    public StatisticsController(LIMSDbContext context)
     {
         _context = context;
     }
@@ -25,16 +25,16 @@ public class StatisticsController : ControllerBase
         {
             samples = new
             {
-                total = await _context.Samples
+                total = await _context.Exams
                     .Where(s => s.ReceivedAt >= start && s.ReceivedAt <= end)
                     .CountAsync(),
-                pending = await _context.Samples
+                pending = await _context.Exams
                     .Where(s => s.ReceivedAt >= start && s.ReceivedAt <= end && s.ValidatedAt == null)
                     .CountAsync(),
-                completed = await _context.Samples
+                completed = await _context.Exams
                     .Where(s => s.ReceivedAt >= start && s.ReceivedAt <= end && s.ValidatedAt != null)
                     .CountAsync(),
-                byClient = await _context.Samples
+                byClient = await _context.Exams
                     .Where(s => s.ReceivedAt >= start && s.ReceivedAt <= end)
                     .GroupBy(s => s.ClientId)
                     .Select(g => new { clientId = g.Key, count = g.Count() })
@@ -63,9 +63,9 @@ public class StatisticsController : ControllerBase
                 total = await _context.ShiftHandovers
                     .Where(sh => sh.HandoverDate >= start && sh.HandoverDate <= end)
                     .CountAsync(),
-                avgPendingSamples = await _context.ShiftHandovers
+                avgPendingExams = await _context.ShiftHandovers
                     .Where(sh => sh.HandoverDate >= start && sh.HandoverDate <= end)
-                    .AverageAsync(sh => (double?)sh.PendingSamplesCount) ?? 0
+                    .AverageAsync(sh => (double?)sh.PendingExamsCount) ?? 0
             },
             dateRange = new
             {
@@ -82,7 +82,7 @@ public class StatisticsController : ControllerBase
     {
         var startDate = DateTime.UtcNow.AddDays(-days);
 
-        var dailyStats = await _context.Samples
+        var dailyStats = await _context.Exams
             .Where(s => s.ReceivedAt != null && s.ReceivedAt >= startDate)
             .GroupBy(s => s.ReceivedAt.Value.Date)
             .Select(g => new

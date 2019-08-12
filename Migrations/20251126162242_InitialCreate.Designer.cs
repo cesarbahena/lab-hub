@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using QuimiOSHub.Data;
+using LIMSApi.Data;
 
 #nullable disable
 
-namespace QuimiOSHub.Migrations
+namespace LIMSApi.Migrations
 {
-    [DbContext(typeof(QuimiosDbContext))]
+    [DbContext(typeof(LIMSDbContext))]
     [Migration("20251126162242_InitialCreate")]
     partial class InitialCreate
     {

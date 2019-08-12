@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using QuimiOSHub.Data;
-using QuimiOSHub.DTOs;
-using QuimiOSHub.Models;
+using LIMSApi.Data;
+using LIMSApi.DTOs;
+using LIMSApi.Models;
 
-namespace QuimiOSHub.Services;
+namespace LIMSApi.Services;
 
 public interface IInventoryService
 {
@@ -15,9 +15,9 @@ public interface IInventoryService
 
 public class InventoryService : IInventoryService
 {
-    private readonly QuimiosDbContext _context;
+    private readonly LIMSDbContext _context;
 
-    public InventoryService(QuimiosDbContext context)
+    public InventoryService(LIMSDbContext context)
     {
         _context = context;
     }

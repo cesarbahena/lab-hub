@@ -1,4 +1,4 @@
-namespace QuimiOSHub.Models;
+namespace LIMSApi.Models;
 
 public class LoginResponse
 {

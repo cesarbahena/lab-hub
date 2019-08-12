@@ -1,17 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QuimiOSHub.Data;
-using QuimiOSHub.Models;
+using LIMSApi.Data;
+using LIMSApi.Models;
 
-namespace QuimiOSHub.Controllers;
+namespace LIMSApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class CheckInsController : ControllerBase
 {
-    private readonly QuimiosDbContext _context;
+    private readonly LIMSDbContext _context;
 
-    public CheckInsController(QuimiosDbContext context)
+    public CheckInsController(LIMSDbContext context)
     {
         _context = context;
     }

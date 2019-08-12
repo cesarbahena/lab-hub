@@ -1,6 +1,6 @@
-namespace QuimiOSHub.DTOs;
+namespace LIMSApi.DTOs;
 
-public class SampleDto
+public class ExamDto
 {
     public int Id { get; set; }
     public DateTime? CreatedAt { get; set; }
@@ -18,7 +18,7 @@ public class SampleDto
     public DateTime? BirthDate { get; set; }
 }
 
-public class SampleFilterDto
+public class ExamFilterDto
 {
     public int? ClientId { get; set; }
     public DateTime? StartDate { get; set; }

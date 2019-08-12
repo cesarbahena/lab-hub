@@ -1,17 +1,17 @@
 using Microsoft.EntityFrameworkCore;
-using QuimiOSHub.Data;
-using QuimiOSHub.Models;
+using LIMSApi.Data;
+using LIMSApi.Models;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace QuimiOSHub.Services;
+namespace LIMSApi.Services;
 
 public class AuthService : IAuthService
 {
-    private readonly QuimiosDbContext _context;
+    private readonly LIMSDbContext _context;
     private static readonly Dictionary<string, (int UserId, DateTime ExpiresAt)> _tokenStore = new();
 
-    public AuthService(QuimiosDbContext context)
+    public AuthService(LIMSDbContext context)
     {
         _context = context;
     }

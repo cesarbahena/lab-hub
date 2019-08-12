@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
-using QuimiOSHub.Data;
+using LIMSApi.Data;
 
-namespace QuimiOSHub.Controllers;
+namespace LIMSApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class HealthController : ControllerBase
 {
-    private readonly QuimiosDbContext _context;
+    private readonly LIMSDbContext _context;
 
-    public HealthController(QuimiosDbContext context)
+    public HealthController(LIMSDbContext context)
     {
         _context = context;
     }

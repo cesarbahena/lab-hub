@@ -1,13 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using QuimiOSHub.Models;
-using QuimiOSHub.Services;
+using LIMSApi.Models;
+using LIMSApi.Services;
 
-namespace QuimiOSHub.Data;
+namespace LIMSApi.Data;
 
 public static class DbSeeder
 {
-    public static async Task SeedAsync(QuimiosDbContext context, ILogger logger)
+    public static async Task SeedAsync(LIMSDbContext context, ILogger logger)
     {
         logger.LogInformation("Starting database seeding...");
 
@@ -30,7 +30,7 @@ public static class DbSeeder
         }
     }
 
-    private static async Task SeedUsersAsync(QuimiosDbContext context, ILogger logger)
+    private static async Task SeedUsersAsync(LIMSDbContext context, ILogger logger)
     {
         if (await context.Users.AnyAsync())
         {
@@ -102,7 +102,7 @@ public static class DbSeeder
         logger.LogInformation("Seeded {Count} users (password: 'password')", users.Count);
     }
 
-    private static async Task SeedShiftsAsync(QuimiosDbContext context, ILogger logger)
+    private static async Task SeedShiftsAsync(LIMSDbContext context, ILogger logger)
     {
         if (await context.Shifts.AnyAsync())
         {
@@ -146,7 +146,7 @@ public static class DbSeeder
         logger.LogInformation("Seeded {Count} shifts", shifts.Count);
     }
 
-    private static async Task SeedReagentsAsync(QuimiosDbContext context, ILogger logger)
+    private static async Task SeedReagentsAsync(LIMSDbContext context, ILogger logger)
     {
         if (await context.Reagents.AnyAsync())
         {
@@ -227,7 +227,7 @@ public static class DbSeeder
         logger.LogInformation("Seeded {Count} reagents with calibration values", reagents.Count);
     }
 
-    private static async Task SeedInventoryItemsAsync(QuimiosDbContext context, ILogger logger)
+    private static async Task SeedInventoryItemsAsync(LIMSDbContext context, ILogger logger)
     {
         if (await context.InventoryItems.AnyAsync())
         {
@@ -326,9 +326,9 @@ public static class DbSeeder
         logger.LogInformation("Seeded {Count} inventory items ({Linked} linked to reagents)", items.Count, linked);
     }
 
-    private static async Task SeedSamplesFromCsvAsync(QuimiosDbContext context, ILogger logger)
+    private static async Task SeedSamplesFromCsvAsync(LIMSDbContext context, ILogger logger)
     {
-        if (await context.Samples.AnyAsync())
+        if (await context.Exams.AnyAsync())
         {
             logger.LogInformation("Samples already exist, skipping");
             return;
@@ -336,13 +336,13 @@ public static class DbSeeder
 
         logger.LogInformation("Seeding samples from Muestras.csv structure...");
 
-        var samples = new List<Sample>();
+        var exams = new List<Exam>();
         var baseDate = DateTime.UtcNow.AddDays(-3);
 
         // Completed samples (for reference)
-        samples.AddRange(new[]
+        exams.AddRange(new[]
         {
-            new Sample
+            new Exam
             {
                 CreatedAt = baseDate.AddDays(-10).AddHours(9).AddMinutes(15),
                 ReceivedAt = baseDate.AddDays(-10).AddHours(10).AddMinutes(30),
@@ -358,7 +358,7 @@ public static class DbSeeder
                 Priority = "Normal",
                 BirthDate = new DateTime(1985, 3, 15, 0, 0, 0, DateTimeKind.Utc)
             },
-            new Sample
+            new Exam
             {
                 CreatedAt = baseDate.AddDays(-8).AddHours(10).AddMinutes(45),
                 ReceivedAt = baseDate.AddDays(-8).AddHours(11).AddMinutes(20),
@@ -377,9 +377,9 @@ public static class DbSeeder
         });
 
         // PENDING SAMPLES - 12 samples for ShiftCheck testing
-        samples.AddRange(new[]
+        exams.AddRange(new[]
         {
-            new Sample
+            new Exam
             {
                 CreatedAt = baseDate.AddHours(8).AddMinutes(30),
                 ReceivedAt = baseDate.AddHours(9).AddMinutes(15),
@@ -395,7 +395,7 @@ public static class DbSeeder
                 Priority = "Urgente",
                 BirthDate = new DateTime(1978, 5, 10, 0, 0, 0, DateTimeKind.Utc),
             },
-            new Sample
+            new Exam
             {
                 CreatedAt = baseDate.AddHours(9).AddMinutes(20),
                 ReceivedAt = baseDate.AddHours(10).AddMinutes(5),
@@ -411,7 +411,7 @@ public static class DbSeeder
                 Priority = "Normal",
                 BirthDate = new DateTime(1992, 11, 8, 0, 0, 0, DateTimeKind.Utc),
             },
-            new Sample
+            new Exam
             {
                 CreatedAt = baseDate.AddDays(1).AddHours(7).AddMinutes(45),
                 ReceivedAt = baseDate.AddDays(1).AddHours(8).AddMinutes(30),
@@ -427,7 +427,7 @@ public static class DbSeeder
                 Priority = "Normal",
                 BirthDate = new DateTime(1965, 2, 14, 0, 0, 0, DateTimeKind.Utc),
             },
-            new Sample
+            new Exam
             {
                 CreatedAt = baseDate.AddDays(1).AddHours(10).AddMinutes(10),
                 ReceivedAt = baseDate.AddDays(1).AddHours(11).AddMinutes(0),
@@ -443,7 +443,7 @@ public static class DbSeeder
                 Priority = "Stat",
                 BirthDate = new DateTime(1988, 9, 3, 0, 0, 0, DateTimeKind.Utc),
             },
-            new Sample
+            new Exam
             {
                 CreatedAt = baseDate.AddDays(1).AddHours(14).AddMinutes(25),
                 ReceivedAt = baseDate.AddDays(1).AddHours(15).AddMinutes(10),
@@ -459,7 +459,7 @@ public static class DbSeeder
                 Priority = "Normal",
                 BirthDate = new DateTime(1995, 6, 18, 0, 0, 0, DateTimeKind.Utc),
             },
-            new Sample
+            new Exam
             {
                 CreatedAt = baseDate.AddDays(2).AddHours(8).AddMinutes(0),
                 ReceivedAt = baseDate.AddDays(2).AddHours(9).AddMinutes(0),
@@ -475,7 +475,7 @@ public static class DbSeeder
                 Priority = "Normal",
                 BirthDate = new DateTime(1982, 1, 27, 0, 0, 0, DateTimeKind.Utc),
             },
-            new Sample
+            new Exam
             {
                 CreatedAt = baseDate.AddDays(2).AddHours(9).AddMinutes(40),
                 ReceivedAt = baseDate.AddDays(2).AddHours(10).AddMinutes(30),
@@ -491,7 +491,7 @@ public static class DbSeeder
                 Priority = "Urgente",
                 BirthDate = new DateTime(1970, 12, 5, 0, 0, 0, DateTimeKind.Utc),
             },
-            new Sample
+            new Exam
             {
                 CreatedAt = baseDate.AddDays(2).AddHours(13).AddMinutes(15),
                 ReceivedAt = baseDate.AddDays(2).AddHours(14).AddMinutes(5),
@@ -507,7 +507,7 @@ public static class DbSeeder
                 Priority = "Normal",
                 BirthDate = new DateTime(1987, 4, 11, 0, 0, 0, DateTimeKind.Utc),
             },
-            new Sample
+            new Exam
             {
                 CreatedAt = baseDate.AddDays(2).AddHours(15).AddMinutes(50),
                 ReceivedAt = baseDate.AddDays(2).AddHours(16).AddMinutes(20),
@@ -523,7 +523,7 @@ public static class DbSeeder
                 Priority = "Normal",
                 BirthDate = new DateTime(1993, 8, 29, 0, 0, 0, DateTimeKind.Utc),
             },
-            new Sample
+            new Exam
             {
                 CreatedAt = baseDate.AddDays(3).AddHours(7).AddMinutes(20),
                 ReceivedAt = baseDate.AddDays(3).AddHours(8).AddMinutes(10),
@@ -539,7 +539,7 @@ public static class DbSeeder
                 Priority = "Stat",
                 BirthDate = new DateTime(1960, 3, 16, 0, 0, 0, DateTimeKind.Utc),
             },
-            new Sample
+            new Exam
             {
                 CreatedAt = baseDate.AddDays(3).AddHours(11).AddMinutes(5),
                 ReceivedAt = baseDate.AddDays(3).AddHours(12).AddMinutes(0),
@@ -555,7 +555,7 @@ public static class DbSeeder
                 Priority = "Normal",
                 BirthDate = new DateTime(1975, 10, 21, 0, 0, 0, DateTimeKind.Utc),
             },
-            new Sample
+            new Exam
             {
                 CreatedAt = baseDate.AddDays(3).AddHours(14).AddMinutes(40),
                 ReceivedAt = baseDate.AddDays(3).AddHours(15).AddMinutes(30),
@@ -573,17 +573,17 @@ public static class DbSeeder
             }
         });
 
-        context.Samples.AddRange(samples);
+        context.Exams.AddRange(exams);
         await context.SaveChangesAsync();
 
-        var pending = samples.Count(s => s.ValidatedAt == null);
-        var completed = samples.Count(s => s.ValidatedAt != null);
+        var pending = exams.Count(s => s.ValidatedAt == null);
+        var completed = exams.Count(s => s.ValidatedAt != null);
 
         logger.LogInformation("Seeded {Total} samples: {Completed} completed, {Pending} pending",
-            samples.Count, completed, pending);
+            exams.Count, completed, pending);
     }
 
-    private static async Task SeedInventoryMovementsAsync(QuimiosDbContext context, ILogger logger)
+    private static async Task SeedInventoryMovementsAsync(LIMSDbContext context, ILogger logger)
     {
         if (await context.InventoryMovements.AnyAsync())
         {
@@ -643,7 +643,7 @@ public static class DbSeeder
             movements.Count(m => m.MovementType == "OUT"));
     }
 
-    private static async Task SeedConsumptionRecordsAsync(QuimiosDbContext context, ILogger logger)
+    private static async Task SeedConsumptionRecordsAsync(LIMSDbContext context, ILogger logger)
     {
         if (await context.ConsumptionRecords.AnyAsync())
         {

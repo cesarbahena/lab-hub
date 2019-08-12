@@ -1,18 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QuimiOSHub.Data;
-using QuimiOSHub.DTOs;
+using LIMSApi.Data;
+using LIMSApi.DTOs;
 
-namespace QuimiOSHub.Controllers;
+namespace LIMSApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class ReagentsController : ControllerBase
 {
-    private readonly QuimiosDbContext _context;
+    private readonly LIMSDbContext _context;
     private readonly ILogger<ReagentsController> _logger;
 
-    public ReagentsController(QuimiosDbContext context, ILogger<ReagentsController> logger)
+    public ReagentsController(LIMSDbContext context, ILogger<ReagentsController> logger)
     {
         _context = context;
         _logger = logger;

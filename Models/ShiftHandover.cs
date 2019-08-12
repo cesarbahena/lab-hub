@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace QuimiOSHub.Models;
+namespace LIMSApi.Models;
 
 [Table("shift_handovers")]
 public class ShiftHandover
@@ -33,10 +33,10 @@ public class ShiftHandover
     public string? Notes { get; set; }
 
     [Column("pending_samples_count")]
-    public int PendingSamplesCount { get; set; }
+    public int PendingExamsCount { get; set; }
 
     [Column("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public ICollection<PendingSample> PendingSamples { get; set; } = new List<PendingSample>();
+    public ICollection<PendingExam> PendingExams { get; set; } = new List<PendingExam>();
 }

@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using QuimiOSHub.Data;
-using QuimiOSHub.Services;
+using LIMSApi.Data;
+using LIMSApi.Services;
 
-namespace QuimiOSHub
+namespace LIMSApi
 {
     public class Startup
     {
@@ -21,10 +21,10 @@ namespace QuimiOSHub
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<QuimiosDbContext>(options =>
+            services.AddDbContext<LIMSDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<ISampleService, SampleService>();
+            services.AddScoped<IExamService, ExamService>();
             services.AddScoped<IInventoryService, InventoryService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<WebFormsHtmlGenerator>();
@@ -37,7 +37,7 @@ namespace QuimiOSHub
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, QuimiosDbContext context, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, LIMSDbContext context, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {

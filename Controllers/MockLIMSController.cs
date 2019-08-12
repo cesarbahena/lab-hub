@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QuimiOSHub.Data;
-using QuimiOSHub.Models;
-using QuimiOSHub.Services;
+using LIMSApi.Data;
+using LIMSApi.Models;
+using LIMSApi.Services;
 using System.Text.RegularExpressions;
 
-namespace QuimiOSHub.Controllers
+namespace LIMSApi.Controllers
 {
     /// <summary>
     /// Mock QuimiOS LIMS endpoints for inventory management.
@@ -15,10 +15,10 @@ namespace QuimiOSHub.Controllers
     [Route("mock-quimios/inventarios")]
     public class MockQuimiOSLimsController : ControllerBase
     {
-        private readonly QuimiosDbContext _context;
+        private readonly LIMSDbContext _context;
         private readonly WebFormsHtmlGenerator _htmlGenerator;
 
-        public MockQuimiOSLimsController(QuimiosDbContext context, WebFormsHtmlGenerator htmlGenerator)
+        public MockQuimiOSLimsController(LIMSDbContext context, WebFormsHtmlGenerator htmlGenerator)
         {
             _context = context;
             _htmlGenerator = htmlGenerator;

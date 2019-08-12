@@ -1,18 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QuimiOSHub.Data;
-using QuimiOSHub.DTOs;
-using QuimiOSHub.Models;
+using LIMSApi.Data;
+using LIMSApi.DTOs;
+using LIMSApi.Models;
 
-namespace QuimiOSHub.Controllers;
+namespace LIMSApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class ShiftHandoversController : ControllerBase
 {
-    private readonly QuimiosDbContext _context;
+    private readonly LIMSDbContext _context;
 
-    public ShiftHandoversController(QuimiosDbContext context)
+    public ShiftHandoversController(LIMSDbContext context)
     {
         _context = context;
     }
@@ -25,8 +25,8 @@ public class ShiftHandoversController : ControllerBase
         var query = _context.ShiftHandovers
             .Include(sh => sh.Shift)
             .Include(sh => sh.User)
-            .Include(sh => sh.PendingSamples)
-                .ThenInclude(ps => ps.Sample)
+            .Include(sh => sh.PendingExams)
+                .ThenInclude(pe => pe.Exam)
             .AsQueryable();
 
         if (startDate.HasValue)
@@ -46,12 +46,12 @@ public class ShiftHandoversController : ControllerBase
                 UserName = sh.User.FullName,
                 HandoverDate = sh.HandoverDate,
                 Notes = sh.Notes,
-                PendingSamplesCount = sh.PendingSamplesCount,
-                PendingSamples = sh.PendingSamples.Select(ps => new PendingSampleDto
+                PendingExamsCount = sh.PendingExamsCount,
+                PendingExams = sh.PendingExams.Select(pe => new PendingExamDto
                 {
-                    SampleId = ps.SampleId,
-                    Folio = ps.Sample.Folio,
-                    Reason = ps.Reason
+                    ExamId = pe.ExamId,
+                    Folio = pe.Exam.Folio,
+                    Reason = pe.Reason
                 }).ToList()
             })
             .ToListAsync();
@@ -65,8 +65,8 @@ public class ShiftHandoversController : ControllerBase
         var handover = await _context.ShiftHandovers
             .Include(sh => sh.Shift)
             .Include(sh => sh.User)
-            .Include(sh => sh.PendingSamples)
-                .ThenInclude(ps => ps.Sample)
+            .Include(sh => sh.PendingExams)
+                .ThenInclude(pe => pe.Exam)
             .Where(sh => sh.Id == id)
             .Select(sh => new ShiftHandoverDto
             {
@@ -77,12 +77,12 @@ public class ShiftHandoversController : ControllerBase
                 UserName = sh.User.FullName,
                 HandoverDate = sh.HandoverDate,
                 Notes = sh.Notes,
-                PendingSamplesCount = sh.PendingSamplesCount,
-                PendingSamples = sh.PendingSamples.Select(ps => new PendingSampleDto
+                PendingExamsCount = sh.PendingExamsCount,
+                PendingExams = sh.PendingExams.Select(pe => new PendingExamDto
                 {
-                    SampleId = ps.SampleId,
-                    Folio = ps.Sample.Folio,
-                    Reason = ps.Reason
+                    ExamId = pe.ExamId,
+                    Folio = pe.Exam.Folio,
+                    Reason = pe.Reason
                 }).ToList()
             })
             .FirstOrDefaultAsync();
@@ -108,23 +108,23 @@ public class ShiftHandoversController : ControllerBase
             UserId = dto.UserId,
             HandoverDate = dto.HandoverDate,
             Notes = dto.Notes,
-            PendingSamplesCount = dto.PendingSamples.Count,
+            PendingExamsCount = dto.PendingExams.Count,
             CreatedAt = DateTime.UtcNow
         };
 
         _context.ShiftHandovers.Add(handover);
         await _context.SaveChangesAsync();
 
-        foreach (var ps in dto.PendingSamples)
+        foreach (var pe in dto.PendingExams)
         {
-            var pendingSample = new PendingSample
+            var pendingExam = new PendingExam
             {
                 ShiftHandoverId = handover.Id,
-                SampleId = ps.SampleId,
-                Reason = ps.Reason,
+                ExamId = pe.ExamId,
+                Reason = pe.Reason,
                 CreatedAt = DateTime.UtcNow
             };
-            _context.PendingSamples.Add(pendingSample);
+            _context.PendingExams.Add(pendingExam);
         }
 
         await _context.SaveChangesAsync();

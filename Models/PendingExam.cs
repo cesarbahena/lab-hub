@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace QuimiOSHub.Models;
+namespace LIMSApi.Models;
 
 [Table("pending_samples")]
-public class PendingSample
+public class PendingExam
 {
     [Key]
     [Column("id")]
@@ -17,12 +17,12 @@ public class PendingSample
     [ForeignKey("ShiftHandoverId")]
     public ShiftHandover ShiftHandover { get; set; } = null!;
 
-    [Column("sample_id")]
+    [Column("exam_id")]
     [Required]
-    public int SampleId { get; set; }
+    public int ExamId { get; set; }
 
-    [ForeignKey("SampleId")]
-    public Sample Sample { get; set; } = null!;
+    [ForeignKey("ExamId")]
+    public Exam Exam { get; set; } = null!;
 
     [Column("reason")]
     [MaxLength(500)]

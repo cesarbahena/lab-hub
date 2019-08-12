@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace QuimiOSHub.Migrations
+namespace LIMSApi.Migrations
 {
     /// <inheritdoc />
     public partial class UpdateExistingUsersWithPasswords : Migration

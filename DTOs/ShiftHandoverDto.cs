@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace QuimiOSHub.DTOs;
+namespace LIMSApi.DTOs;
 
 public class ShiftHandoverDto
 {
@@ -11,13 +11,13 @@ public class ShiftHandoverDto
     public string? UserName { get; set; }
     public DateTime HandoverDate { get; set; }
     public string? Notes { get; set; }
-    public int PendingSamplesCount { get; set; }
-    public List<PendingSampleDto> PendingSamples { get; set; } = new();
+    public int PendingExamsCount { get; set; }
+    public List<PendingExamDto> PendingExams { get; set; } = new();
 }
 
-public class PendingSampleDto
+public class PendingExamDto
 {
-    public int SampleId { get; set; }
+    public int ExamId { get; set; }
     public int? Folio { get; set; }
     public string? Reason { get; set; }
 }
@@ -36,13 +36,13 @@ public class CreateShiftHandoverDto
     [MaxLength(2000)]
     public string? Notes { get; set; }
 
-    public List<CreatePendingSampleDto> PendingSamples { get; set; } = new();
+    public List<CreatePendingExamDto> PendingExams { get; set; } = new();
 }
 
-public class CreatePendingSampleDto
+public class CreatePendingExamDto
 {
     [Required]
-    public int SampleId { get; set; }
+    public int ExamId { get; set; }
 
     public int? Folio { get; set; }
 

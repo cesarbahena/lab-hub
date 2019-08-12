@@ -1,6 +1,6 @@
-using QuimiOSHub.Models;
+using LIMSApi.Models;
 
-namespace QuimiOSHub.Services;
+namespace LIMSApi.Services;
 
 public interface IAuthService
 {

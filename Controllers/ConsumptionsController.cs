@@ -1,19 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QuimiOSHub.Data;
-using QuimiOSHub.DTOs;
-using QuimiOSHub.Models;
+using LIMSApi.Data;
+using LIMSApi.DTOs;
+using LIMSApi.Models;
 
-namespace QuimiOSHub.Controllers;
+namespace LIMSApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class ConsumptionsController : ControllerBase
 {
-    private readonly QuimiosDbContext _context;
+    private readonly LIMSDbContext _context;
     private readonly ILogger<ConsumptionsController> _logger;
 
-    public ConsumptionsController(QuimiosDbContext context, ILogger<ConsumptionsController> logger)
+    public ConsumptionsController(LIMSDbContext context, ILogger<ConsumptionsController> logger)
     {
         _context = context;
         _logger = logger;

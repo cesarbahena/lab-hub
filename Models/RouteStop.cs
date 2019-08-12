@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace QuimiOSHub.Models;
+namespace LIMSApi.Models;
 
 [Table("route_stops")]
 public class RouteStop
